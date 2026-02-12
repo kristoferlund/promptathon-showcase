@@ -16,7 +16,7 @@ export default function useSearch(query: string) {
 
       return result.Ok;
     },
-    enabled: !!server && query.trim().length > 0,
+    enabled: !!server && query.trim().length >= 3,
     structuralSharing: false,
   });
 }

@@ -1,5 +1,6 @@
-import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
-import { useState, useEffect } from "react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
+import { useDebouncer } from "@tanstack/react-pacer";
 import useListApps from "@/hooks/use-list-apps";
 import useSearch from "@/hooks/use-search";
 import { R2_PUBLIC_URL } from "@/lib/constants";
@@ -7,32 +8,28 @@ import { Search } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   component: Index,
-  validateSearch: (search: Record<string, unknown>) => ({
-    q: (search.q as string) || "",
-  }),
 });
 
 function Index() {
-  const navigate = useNavigate();
-  const { q } = Route.useSearch();
-  const [query, setQuery] = useState(q);
+  const [query, setQuery] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState("");
   const { data: apps, isLoading: appsLoading } = useListApps();
-  const { data: searchResults, isLoading: searchLoading } = useSearch(q);
+  const { data: searchResults, isLoading: searchLoading } = useSearch(
+    debouncedQuery,
+  );
 
-  useEffect(() => {
-    setQuery(q);
-  }, [q]);
+  const debouncer = useDebouncer(
+    (value: string) => setDebouncedQuery(value.trim()),
+    { wait: 500 },
+  );
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    void navigate({
-      to: "/",
-      search: { q: query.trim() },
-      replace: false,
-    });
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setQuery(value);
+    debouncer.maybeExecute(value);
   };
 
-  const isSearching = q.trim().length > 0;
+  const isSearching = debouncedQuery.length >= 3;
 
   return (
     <div className="min-h-screen flex flex-col items-center">
@@ -48,29 +45,27 @@ function Index() {
         )}
       </div>
 
-      {/* Search Form */}
+      {/* Search */}
       <div className="w-full max-w-[640px] px-4 mt-8">
-        <form onSubmit={handleSearch}>
-          <div className="relative flex-1">
-            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground">
-              <Search size={18} />
-            </div>
-            <input
-              type="text"
-              value={query}
-              onChange={(e) => { setQuery(e.target.value); }}
-              placeholder="Search apps..."
-              autoComplete="off"
-              className="w-full h-12 text-[15px] pl-12 pr-4 rounded-full border border-border bg-card text-foreground placeholder:text-muted-foreground focus:bg-secondary focus:border-primary transition-all focus:outline-none"
-              autoFocus
-            />
+        <div className="relative flex-1">
+          <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground">
+            <Search size={18} />
           </div>
-        </form>
+          <input
+            type="text"
+            value={query}
+            onChange={handleChange}
+            placeholder="Search apps..."
+            autoComplete="off"
+            className="w-full h-12 text-[15px] pl-12 pr-4 rounded-full border border-border bg-card text-foreground placeholder:text-muted-foreground focus:bg-secondary focus:border-primary transition-all focus:outline-none"
+            autoFocus
+          />
+        </div>
       </div>
 
       {isSearching ? (
         <SearchResults
-          query={q}
+          query={debouncedQuery}
           results={searchResults}
           isLoading={searchLoading}
         />
