@@ -42,7 +42,7 @@ function AppDetail() {
   }
 
   const createdDate = app.created_at
-    ? new Date(app.created_at * 1000).toLocaleDateString("en-US", {
+    ? new Date(Number(app.created_at) * 1000).toLocaleDateString("en-US", {
         year: "numeric",
         month: "long",
         day: "numeric",

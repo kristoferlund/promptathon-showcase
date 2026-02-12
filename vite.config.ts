@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import environment from "vite-plugin-environment";
 import path from "path";
 import { tanstackRouter } from "@tanstack/router-plugin/vite";
+import { icpBindgen } from "@icp-sdk/bindgen/plugins/vite";
 
 dotenv.config({ path: ".env" });
 
@@ -33,6 +34,10 @@ export default defineConfig({
     environment("all", { prefix: "DFX_" }),
     tailwindcss(),
     tanstackRouter({ target: "react", autoCodeSplitting: true }),
+    icpBindgen({
+      didFile: "./src/server/server.did",
+      outDir: "./src",
+    }),
   ],
   resolve: {
     alias: {

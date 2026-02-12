@@ -9,6 +9,20 @@
 import { IDL } from '@icp-sdk/core/candid';
 
 export const idlFactory = ({ IDL }) => {
+  const App = IDL.Record({
+    'id' : IDL.Int64,
+    'url' : IDL.Text,
+    'title' : IDL.Text,
+    'updated_at' : IDL.Int64,
+    'author_name' : IDL.Opt(IDL.Text),
+    'canister_id' : IDL.Opt(IDL.Text),
+    'description' : IDL.Text,
+    'created_at' : IDL.Int64,
+    'image_id' : IDL.Opt(IDL.Text),
+    'social_post_url' : IDL.Opt(IDL.Text),
+    'app_name' : IDL.Opt(IDL.Text),
+  });
+  const GetAppResult = IDL.Variant({ 'Ok' : App, 'Err' : IDL.Text });
   const HeaderField = IDL.Tuple(IDL.Text, IDL.Text);
   const HttpRequest = IDL.Record({
     'url' : IDL.Text,
@@ -22,27 +36,13 @@ export const idlFactory = ({ IDL }) => {
     'headers' : IDL.Vec(HeaderField),
     'status_code' : IDL.Nat16,
   });
-  const App = IDL.Record({
-    'id' : IDL.Int64,
-    'url' : IDL.Text,
-    'canister_id' : IDL.Opt(IDL.Text),
-    'title' : IDL.Text,
-    'description' : IDL.Text,
-    'image_id' : IDL.Opt(IDL.Text),
-    'author_name' : IDL.Opt(IDL.Text),
-    'app_name' : IDL.Opt(IDL.Text),
-    'social_post_url' : IDL.Opt(IDL.Text),
-    'created_at' : IDL.Int64,
-    'updated_at' : IDL.Int64,
-  });
-  const GetAppResult = IDL.Variant({ 'Ok' : App, 'Err' : IDL.Text });
   const SearchResult = IDL.Variant({ 'Ok' : IDL.Vec(App), 'Err' : IDL.Text });
-
+  
   return IDL.Service({
+    'get_app' : IDL.Func([IDL.Int64], [GetAppResult], ['query']),
     'http_request' : IDL.Func([HttpRequest], [HttpResponse], ['query']),
     'http_request_update' : IDL.Func([HttpRequest], [HttpResponse], []),
     'list_apps' : IDL.Func([], [IDL.Vec(App)], ['query']),
-    'get_app' : IDL.Func([IDL.Int64], [GetAppResult], ['query']),
     'search' : IDL.Func([IDL.Text], [SearchResult], ['query']),
   });
 };
