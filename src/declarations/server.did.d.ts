@@ -12,12 +12,16 @@ import type { Principal } from '@icp-sdk/core/principal';
 
 export interface App {
   'id' : bigint,
+  'url' : string,
+  'canister_id' : [] | [string],
   'title' : string,
-  'updated_at' : bigint,
-  'canister_id' : string,
   'description' : string,
-  'created_at' : bigint,
   'image_id' : [] | [string],
+  'author_name' : [] | [string],
+  'app_name' : [] | [string],
+  'social_post_url' : [] | [string],
+  'created_at' : bigint,
+  'updated_at' : bigint,
 }
 export type HeaderField = [string, string];
 export interface HttpRequest {
@@ -32,11 +36,16 @@ export interface HttpResponse {
   'headers' : Array<HeaderField>,
   'status_code' : number,
 }
+export type GetAppResult = { 'Ok' : App } |
+  { 'Err' : string };
 export type SearchResult = { 'Ok' : Array<App> } |
   { 'Err' : string };
 export interface _SERVICE {
   'http_request' : ActorMethod<[HttpRequest], HttpResponse>,
-  'search_apps' : ActorMethod<[string], SearchResult>,
+  'http_request_update' : ActorMethod<[HttpRequest], HttpResponse>,
+  'list_apps' : ActorMethod<[], Array<App>>,
+  'get_app' : ActorMethod<[bigint], GetAppResult>,
+  'search' : ActorMethod<[string], SearchResult>,
 }
 export declare const idlFactory: IDL.InterfaceFactory;
 export declare const init: (args: { IDL: typeof IDL }) => IDL.Type[];

@@ -1,20 +1,42 @@
 import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react-swc";
 import tailwindcss from "@tailwindcss/vite";
+import dotenv from "dotenv";
+import environment from "vite-plugin-environment";
+import path from "path";
+import { tanstackRouter } from "@tanstack/router-plugin/vite";
 
-// CSS-only build for server-side rendered pages
+dotenv.config({ path: ".env" });
+
 export default defineConfig({
-  publicDir: "public",
   build: {
     outDir: "src/dist",
-    rollupOptions: {
-      input: "./src/main.js",
-      output: {
-        assetFileNames: "assets/[name].[ext]",
+  },
+  optimizeDeps: {
+    esbuildOptions: {
+      define: {
+        global: "globalThis",
       },
     },
-    cssCodeSplit: false,
+  },
+  server: {
+    proxy: {
+      "/api": {
+        target: "http://127.0.0.1:4943",
+        changeOrigin: true,
+      },
+    },
   },
   plugins: [
+    react(),
+    environment("all", { prefix: "CANISTER_" }),
+    environment("all", { prefix: "DFX_" }),
     tailwindcss(),
+    tanstackRouter({ target: "react", autoCodeSplitting: true }),
   ],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src/"),
+    },
+  },
 });

@@ -1,19 +1,19 @@
 import { useQuery } from "@tanstack/react-query";
 import { getActor, toAppData, type AppData } from "@/lib/actor";
 
-export default function useSearch(query: string) {
-  return useQuery<AppData[]>({
-    queryKey: ["search", query],
+export default function useGetApp(id: number) {
+  return useQuery<AppData>({
+    queryKey: ["app", id],
     queryFn: async () => {
       const actor = getActor();
-      const result = await actor.search(query);
+      const result = await actor.get_app(BigInt(id));
 
       if (result.__kind__ === "Err") {
         throw new Error(result.Err);
       }
 
-      return result.Ok.map(toAppData);
+      return toAppData(result.Ok);
     },
-    enabled: query.trim().length > 0,
+    enabled: id > 0,
   });
 }

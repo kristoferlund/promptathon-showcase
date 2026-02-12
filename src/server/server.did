@@ -33,7 +33,15 @@ type SearchResult = variant {
     Err : text;
 };
 
+type GetAppResult = variant {
+    Ok : App;
+    Err : text;
+};
+
 service : {
     http_request : (request : HttpRequest) -> (HttpResponse) query;
-    search_apps : (text) -> (SearchResult) query;
+    http_request_update : (request : HttpRequest) -> (HttpResponse);
+    list_apps : () -> (vec App) query;
+    get_app : (int64) -> (GetAppResult) query;
+    search : (text) -> (SearchResult) query;
 };

@@ -24,18 +24,26 @@ export const idlFactory = ({ IDL }) => {
   });
   const App = IDL.Record({
     'id' : IDL.Int64,
+    'url' : IDL.Text,
+    'canister_id' : IDL.Opt(IDL.Text),
     'title' : IDL.Text,
-    'updated_at' : IDL.Int64,
-    'canister_id' : IDL.Text,
     'description' : IDL.Text,
-    'created_at' : IDL.Int64,
     'image_id' : IDL.Opt(IDL.Text),
+    'author_name' : IDL.Opt(IDL.Text),
+    'app_name' : IDL.Opt(IDL.Text),
+    'social_post_url' : IDL.Opt(IDL.Text),
+    'created_at' : IDL.Int64,
+    'updated_at' : IDL.Int64,
   });
+  const GetAppResult = IDL.Variant({ 'Ok' : App, 'Err' : IDL.Text });
   const SearchResult = IDL.Variant({ 'Ok' : IDL.Vec(App), 'Err' : IDL.Text });
-  
+
   return IDL.Service({
     'http_request' : IDL.Func([HttpRequest], [HttpResponse], ['query']),
-    'search_apps' : IDL.Func([IDL.Text], [SearchResult], ['query']),
+    'http_request_update' : IDL.Func([HttpRequest], [HttpResponse], []),
+    'list_apps' : IDL.Func([], [IDL.Vec(App)], ['query']),
+    'get_app' : IDL.Func([IDL.Int64], [GetAppResult], ['query']),
+    'search' : IDL.Func([IDL.Text], [SearchResult], ['query']),
   });
 };
 

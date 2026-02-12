@@ -53,16 +53,27 @@ function record_opt_to_undefined<T>(arg: T | null): T | undefined {
 }
 export interface App {
     id: bigint;
+    url: string;
+    canister_id?: string;
     title: string;
-    updated_at: bigint;
-    canister_id: string;
     description: string;
-    created_at: bigint;
     image_id?: string;
+    author_name?: string;
+    app_name?: string;
+    social_post_url?: string;
+    created_at: bigint;
+    updated_at: bigint;
 }
 export type SearchResult = {
     __kind__: "Ok";
     Ok: Array<App>;
+} | {
+    __kind__: "Err";
+    Err: string;
+};
+export type GetAppResult = {
+    __kind__: "Ok";
+    Ok: App;
 } | {
     __kind__: "Err";
     Err: string;
@@ -82,17 +93,27 @@ export interface HttpResponse {
 }
 export interface serverInterface {
     http_request(request: HttpRequest): Promise<HttpResponse>;
-    search_apps(arg0: string): Promise<SearchResult>;
+    list_apps(): Promise<Array<App>>;
+    get_app(id: bigint): Promise<GetAppResult>;
+    search(query: string): Promise<SearchResult>;
 }
-import type { App as _App, HeaderField as _HeaderField, HttpRequest as _HttpRequest, SearchResult as _SearchResult } from "./declarations/server.did.d.ts";
+import type { App as _App, HeaderField as _HeaderField, HttpRequest as _HttpRequest, GetAppResult as _GetAppResult, SearchResult as _SearchResult } from "./declarations/server.did.d.ts";
 export class Server implements serverInterface {
     constructor(private actor: ActorSubclass<_SERVICE>){}
     async http_request(arg0: HttpRequest): Promise<HttpResponse> {
         const result = await this.actor.http_request(to_candid_HttpRequest_n1(arg0));
         return result;
     }
-    async search_apps(arg0: string): Promise<SearchResult> {
-        const result = await this.actor.search_apps(arg0);
+    async list_apps(): Promise<Array<App>> {
+        const result = await this.actor.list_apps();
+        return from_candid_vec_n5(result);
+    }
+    async get_app(arg0: bigint): Promise<GetAppResult> {
+        const result = await this.actor.get_app(arg0);
+        return from_candid_GetAppResult_n9(result);
+    }
+    async search(arg0: string): Promise<SearchResult> {
+        const result = await this.actor.search(arg0);
         return from_candid_SearchResult_n3(result);
     }
 }
@@ -102,34 +123,49 @@ function from_candid_App_n6(value: _App): App {
 function from_candid_SearchResult_n3(value: _SearchResult): SearchResult {
     return from_candid_variant_n4(value);
 }
+function from_candid_GetAppResult_n9(value: _GetAppResult): GetAppResult {
+    return from_candid_variant_n10(value);
+}
 function from_candid_opt_n8(value: [] | [string]): string | null {
     return value.length === 0 ? null : value[0];
 }
 function from_candid_record_n7(value: {
     id: bigint;
+    url: string;
+    canister_id: [] | [string];
     title: string;
-    updated_at: bigint;
-    canister_id: string;
     description: string;
-    created_at: bigint;
     image_id: [] | [string];
+    author_name: [] | [string];
+    app_name: [] | [string];
+    social_post_url: [] | [string];
+    created_at: bigint;
+    updated_at: bigint;
 }): {
     id: bigint;
+    url: string;
+    canister_id?: string;
     title: string;
-    updated_at: bigint;
-    canister_id: string;
     description: string;
-    created_at: bigint;
     image_id?: string;
+    author_name?: string;
+    app_name?: string;
+    social_post_url?: string;
+    created_at: bigint;
+    updated_at: bigint;
 } {
     return {
         id: value.id,
+        url: value.url,
+        canister_id: record_opt_to_undefined(from_candid_opt_n8(value.canister_id)),
         title: value.title,
-        updated_at: value.updated_at,
-        canister_id: value.canister_id,
         description: value.description,
+        image_id: record_opt_to_undefined(from_candid_opt_n8(value.image_id)),
+        author_name: record_opt_to_undefined(from_candid_opt_n8(value.author_name)),
+        app_name: record_opt_to_undefined(from_candid_opt_n8(value.app_name)),
+        social_post_url: record_opt_to_undefined(from_candid_opt_n8(value.social_post_url)),
         created_at: value.created_at,
-        image_id: record_opt_to_undefined(from_candid_opt_n8(value.image_id))
+        updated_at: value.updated_at,
     };
 }
 function from_candid_variant_n4(value: {
@@ -146,6 +182,25 @@ function from_candid_variant_n4(value: {
     return "Ok" in value ? {
         __kind__: "Ok",
         Ok: from_candid_vec_n5(value.Ok)
+    } : "Err" in value ? {
+        __kind__: "Err",
+        Err: value.Err
+    } : value;
+}
+function from_candid_variant_n10(value: {
+    Ok: _App;
+} | {
+    Err: string;
+}): {
+    __kind__: "Ok";
+    Ok: App;
+} | {
+    __kind__: "Err";
+    Err: string;
+} {
+    return "Ok" in value ? {
+        __kind__: "Ok",
+        Ok: from_candid_App_n6(value.Ok)
     } : "Err" in value ? {
         __kind__: "Err",
         Err: value.Err
