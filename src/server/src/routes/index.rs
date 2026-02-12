@@ -22,13 +22,16 @@ pub fn handler(req: HttpRequest, _: RouteParams) -> HttpResponse<'static> {
     };
 
     // Perform search if query is present
-    let results = if !query.is_empty() {
-        let search_results = AppManager::search(&query).unwrap_or_default();
-        ic_cdk::println!("Found {} results", search_results.len());
-        search_results
+    let search_results = if !query.is_empty() {
+        let results = AppManager::search(&query).unwrap_or_default();
+        ic_cdk::println!("Found {} results", results.len());
+        results
     } else {
         Vec::new()
     };
+
+    // Always load all apps for the gallery grid
+    let all_apps = AppManager::list().unwrap_or_default();
 
     let env = Environment::new();
     let template = env.template_from_str(html).unwrap();
@@ -36,9 +39,11 @@ pub fn handler(req: HttpRequest, _: RouteParams) -> HttpResponse<'static> {
         "title": "Promptathon Showcase",
         "description": "A gallery showcasing apps built on the Internet Computer",
         "query": query,
-        "results": results,
-        "result_count": results.len(),
-        "has_results": !results.is_empty(),
+        "search_results": search_results,
+        "search_result_count": search_results.len(),
+        "has_search_results": !search_results.is_empty(),
+        "apps": all_apps,
+        "app_count": all_apps.len(),
         "r2_public_url": crate::get_r2_public_url()
     });
     let rendered = template.render(ctx).unwrap();
