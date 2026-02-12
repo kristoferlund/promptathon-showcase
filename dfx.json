@@ -1,0 +1,31 @@
+{
+  "canisters": {
+    "server": {
+      "candid": "src/server/server.did",
+      "package": "server",
+      "build": [
+        "pnpm run build",
+        "cargo build -p server --target wasm32-wasip1 --release",
+        "wasi2ic target/wasm32-wasip1/release/server.wasm target/wasm32-wasip1/release/server_wasi2ic.wasm"
+      ],
+      "wasm": "target/wasm32-wasip1/release/server_wasi2ic.wasm",
+      "type": "custom",
+      "metadata": [
+        {
+          "name": "candid:service"
+        }
+      ],
+      "declarations": {
+        "bindings": []
+      }
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
+}

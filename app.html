@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en" class="bg-background">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{title}}</title>
+    <meta name="description" content="{{description}}" />
+    <meta property="og:title" content="{{title}}" />
+    <meta property="og:description" content="{{description}}" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="{{title}}" />
+    <meta name="twitter:description" content="{{description}}" />
+    <link rel="stylesheet" href="/assets/style.css">
+    <script>
+      // Preserve search query when navigating back
+      document.addEventListener('DOMContentLoaded', function() {
+        const backLink = document.querySelector('.back-link');
+        if (backLink) {
+          const urlParams = new URLSearchParams(window.location.search);
+          const refParam = urlParams.get('ref');
+          if (refParam) {
+            backLink.href = '/?q=' + encodeURIComponent(refParam);
+          }
+        }
+      });
+    </script>
+  </head>
+  <body class="text-foreground min-h-screen">
+    <div class="max-w-3xl mx-auto px-8 py-12">
+      <div class="mb-12">
+        <a href="/" class="text-primary hover:text-primary/80 no-underline text-sm inline-flex items-center gap-2 transition-colors back-link">← Search</a>
+      </div>
+      <article>
+        <h1 class="text-4xl font-bold text-foreground my-4 leading-tight">{{title}}</h1>
+        {% if url %}
+          <div class="text-sm text-muted-foreground mb-2 flex items-center gap-2 font-medium">
+            <a href="{{url}}" target="_new" class="underline!">{{url}}</a>
+          </div>
+        {% endif %}
+
+        {% if image_id %}
+        <div class="w-full rounded-xl my-8 overflow-hidden bg-card">
+          <img src="{{r2_public_url}}/{{image_id}}_1500.jpg" alt="{{title}}" class="w-full h-auto" loading="lazy" />
+        </div>
+        {% endif %}
+        <div class="text-lg text-muted-foreground my-6 leading-relaxed">{{description}}</div>
+        <div class="text-sm text-muted-foreground mt-12 pt-8 border-t border-border">
+          Created: {{created_at}}
+        </div>
+      </article>
+    </div>
+  </body>
+</html>

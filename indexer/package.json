@@ -1,0 +1,24 @@
+{
+  "name": "promptathon-showcase-indexer",
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx example.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.32.1",
+    "@aws-sdk/client-s3": "^3.966.0",
+    "dotenv": "^16.4.7",
+    "openai": "^4.75.0",
+    "p-queue": "^8.0.1",
+    "playwright": "^1.48.2",
+    "sharp": "^0.34.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}

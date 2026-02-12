@@ -1,0 +1,51 @@
+type HeaderField = record { text; text };
+
+type HttpRequest = record {
+    method : text;
+    url : text;
+    headers : vec HeaderField;
+    body : blob;
+    certificate_version : opt nat16;
+};
+
+type HttpResponse = record {
+    status_code : nat16;
+    headers : vec HeaderField;
+    body : blob;
+};
+
+type App = record {
+    id : int64;
+    url : text;
+    canister_id : opt text;
+    title : text;
+    description : text;
+    image_id : opt text;
+    created_at : int64;
+    updated_at : int64;
+};
+
+type AppInput = record {
+    url : text;
+    canister_id : opt text;
+    title : text;
+    description : text;
+    image_id : opt text;
+};
+
+type SearchResult = variant {
+    Ok : vec App;
+    Err : text;
+};
+
+type AppResult = variant {
+    Ok : App;
+    Err : text;
+};
+
+service : (opt principal) -> {
+    http_request : (request : HttpRequest) -> (HttpResponse) query;
+    search_apps : (text) -> (SearchResult) query;
+    upsert_app : (AppInput) -> (AppResult);
+};
+

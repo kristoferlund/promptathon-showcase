@@ -1,0 +1,122 @@
+@import "tailwindcss";
+
+/* Cyber Bunker Color Theme */
+:root {
+  --background: #000000;
+  --foreground: #ffffff;
+  --card: #202020;
+  --card-foreground: #ffffff;
+  --primary: #DDF730;
+  --primary-foreground: #000000;
+  --secondary: #2B2B2B;
+  --secondary-foreground: #ffffff;
+  --muted: #3d3d3d;
+  --muted-foreground: #aaaaaa;
+  --accent: #DDF730;
+  --accent-foreground: #000000;
+  --destructive: #ff4444;
+  --destructive-foreground: #ffffff;
+  --border: #3d3d3d;
+  --input: #202020;
+  --ring: #DDF730;
+}
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+}
+
+/*
+ * Fonts
+ */
+
+/* Sohne */
+@font-face {
+  font-family: 'Sohne';
+  src: url('/fonts/Sohne-Leicht.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Sohne';
+  src: url('/fonts/Sohne-Buch.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Sohne';
+  src: url('/fonts/Sohne-Kraftig.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Sohne';
+  src: url('/fonts/SohneBreit-Halbfett.otf') format('opentype');
+  font-weight: 600;
+  font-style: normal;
+}
+
+/* Base Styles */
+html {
+  font-size: 16px;
+}
+
+html,
+body,
+button,
+input,
+textarea,
+select,
+option {
+  font-family: 'Sohne', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+a {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+svg {
+  overflow: visible;
+}
+
+a,
+button:not(:disabled) {
+  cursor: pointer;
+}
+
+a,
+div,
+span,
+li,
+ul,
+ol,
+button {
+  box-sizing: border-box;
+}
