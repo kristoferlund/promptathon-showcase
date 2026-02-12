@@ -1,7 +1,12 @@
 import PQueue from 'p-queue';
 import { BrowserExtractor } from './extractor.js';
 import { AIEnricher } from './ai.js';
-import type { PageSnapshot, IndexerConfig, EmitFn } from './types.js';
+import type { PageSnapshot, IndexerConfig, EmitFn, SubmissionMeta } from './types.js';
+
+export type SubmissionInput = {
+  url: string;
+  meta: SubmissionMeta;
+};
 
 export class PageIndexer {
   private config: IndexerConfig & { concurrency: number; timeout: number };
@@ -21,14 +26,25 @@ export class PageIndexer {
     });
   }
 
+  /**
+   * @deprecated Use processSubmissions instead
+   */
   async processUrls(urls: string[], emit: EmitFn): Promise<void> {
+    const submissions = urls.map((url) => ({
+      url,
+      meta: { authorName: 'Unknown', appName: 'Untitled', socialPostUrl: '' },
+    }));
+    await this.processSubmissions(submissions, emit);
+  }
+
+  async processSubmissions(submissions: SubmissionInput[], emit: EmitFn): Promise<void> {
     await this.extractor.init();
 
     const queue = new PQueue({ concurrency: this.config.concurrency });
 
-    const tasks = urls.map((url) =>
+    const tasks = submissions.map((submission) =>
       queue.add(async () => {
-        const snapshot = await this.processUrl(url);
+        const snapshot = await this.processSubmission(submission);
         await emit(snapshot);
       })
     );
@@ -38,19 +54,20 @@ export class PageIndexer {
     await this.extractor.close();
   }
 
-  private async processUrl(url: string): Promise<PageSnapshot> {
+  private async processSubmission(submission: SubmissionInput): Promise<PageSnapshot> {
     try {
-      const extracted = await this.extractor.extract(url);
+      const extracted = await this.extractor.extract(submission.url);
 
       const aiResult = await this.enricher.enrich({
-        url,
+        url: submission.url,
         rawTitle: extracted.rawTitle,
         metaDescription: extracted.metaDescription,
         extractedText: extracted.extractedText,
       });
 
       return {
-        url,
+        url: submission.url,
+        submission: submission.meta,
         rawTitle: extracted.rawTitle,
         metaDescription: extracted.metaDescription,
         extractedText: extracted.extractedText,
@@ -63,7 +80,8 @@ export class PageIndexer {
       };
     } catch (error) {
       return {
-        url,
+        url: submission.url,
+        submission: submission.meta,
         rawTitle: '',
         metaDescription: null,
         extractedText: '',

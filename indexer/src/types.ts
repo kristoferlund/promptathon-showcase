@@ -2,8 +2,17 @@ export type Input = {
   urls: string[];
 };
 
+export type SubmissionMeta = {
+  authorName: string;
+  appName: string;
+  socialPostUrl: string;
+};
+
 export type PageSnapshot = {
   url: string;
+
+  // Submission metadata (from CSV)
+  submission: SubmissionMeta;
 
   // Raw data
   rawTitle: string;

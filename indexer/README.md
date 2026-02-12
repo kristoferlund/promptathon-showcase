@@ -1,101 +1,74 @@
 # Promptathon Showcase Indexer
 
-URL snapshot and metadata pipeline that indexes web applications into the Promptathon Showcase canister.
-
-## Features
-
-- Headless browser rendering with Playwright
-- Full-page screenshot capture
-- Content extraction (title, meta, text)
-- AI-powered title and description generation (OpenAI or Anthropic)
-- Concurrent processing with worker pool
-- Automatic push to search canister via dfx CLI
+Build-time tool that reads `submissions.csv`, crawls each app URL, generates AI metadata and screenshots, and outputs a SQL seed file that gets baked into the canister at deploy time.
 
 ## Installation
 
 ```bash
 cd indexer
-npm install
-npx playwright install chromium
+pnpm install
+pnpm exec playwright install chromium
 ```
 
 ## Configuration
 
-Create a `.env` file:
+```bash
+cp .env.example .env
+```
+
+Edit `.env`:
 
 ```bash
 # AI Provider - Choose one:
 OPENAI_API_KEY=sk-...
 # ANTHROPIC_API_KEY=sk-ant-...
 
-# Canister Configuration
-CANISTER_ID=uxrrr-q7777-77774-qaaaq-cai
-NETWORK=local  # or "ic" for mainnet
+# Limit submissions to process (useful during development)
+LIMIT=5
+
+# Cloudflare R2 (optional - for screenshot hosting)
+R2_ACCOUNT_ID=your-account-id
+R2_ACCESS_KEY_ID=your-access-key
+R2_SECRET_ACCESS_KEY=your-secret-key
+R2_BUCKET_NAME=promptathon-images
+R2_PUBLIC_URL=https://images.yourdomain.com
 ```
 
 ## Usage
 
 ```bash
-npm run dev
+# Process first 5 submissions (fast, for development)
+LIMIT=5 pnpm dev
+
+# Process all submissions
+pnpm dev
 ```
 
-Or programmatically:
+This writes `src/server/src/seeds/seed_apps.sql`. Then deploy the canister:
 
-```typescript
-import { PageIndexer, CanisterClient } from './src/index.js';
-
-const indexer = new PageIndexer({
-  openaiApiKey: process.env.OPENAI_API_KEY,
-  concurrency: 3,
-});
-
-const canister = new CanisterClient({
-  canisterId: 'your-canister-id',
-  network: 'local',
-});
-
-await indexer.processUrls(urls, async (snapshot) => {
-  await canister.upsertApp(snapshot);
-});
+```bash
+# From the project root
+dfx deploy server
 ```
 
 ## How It Works
 
-1. **Navigate** - Opens URL in headless Chromium
-2. **Extract** - Captures title, meta description, visible text
-3. **Screenshot** - Takes full-page PNG screenshot
-4. **AI Enrich** - Generates optimized title & description
-5. **Push** - Calls `dfx canister call upsert_app` to store in canister
+1. **Parse** - Reads submissions from `submissions.csv`
+2. **Navigate** - Opens each app URL in headless Chromium
+3. **Extract** - Captures title, meta description, visible text
+4. **Screenshot** - Takes dual-resolution JPEG screenshots (1500x844 + 200x112)
+5. **AI Enrich** - Generates optimized title and description via OpenAI or Anthropic
+6. **Upload** - Uploads screenshots to Cloudflare R2 (if configured)
+7. **Output** - Writes SQL INSERT statements to `seed_apps.sql`
 
 ## Data Flow
 
 ```
-URL → Playwright → Screenshot + Text → AI → Canister
+submissions.csv → Playwright → Screenshots + Text → AI → seed_apps.sql
+                                                      → R2 (screenshots)
 ```
 
-Each URL produces:
-```typescript
-{
-  url: "https://example.com",
-  canister_id: "abc-123" | null,  // Auto-extracted from ICP URLs
-  aiTitle: "AI-generated title",
-  aiDescription: "AI-generated description",
-  screenshotPngBase64: "...",
-  status: "ok" | "error"
-}
-```
-
-## Admin Access
-
-The canister must be deployed with an admin principal:
-
-```bash
-dfx deploy server --argument "(opt principal \"$(dfx identity get-principal)\")"
-```
-
-Only the admin can call `upsert_app`.
-
-## Models
+## AI Models
 
 - **OpenAI**: gpt-4o-mini (~$0.15/1M tokens)
 - **Anthropic**: claude-3-5-haiku (~$0.80/1M tokens)

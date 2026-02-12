@@ -21,16 +21,11 @@ type App = record {
     title : text;
     description : text;
     image_id : opt text;
+    author_name : opt text;
+    app_name : opt text;
+    social_post_url : opt text;
     created_at : int64;
     updated_at : int64;
-};
-
-type AppInput = record {
-    url : text;
-    canister_id : opt text;
-    title : text;
-    description : text;
-    image_id : opt text;
 };
 
 type SearchResult = variant {
@@ -38,14 +33,7 @@ type SearchResult = variant {
     Err : text;
 };
 
-type AppResult = variant {
-    Ok : App;
-    Err : text;
-};
-
-service : (opt principal) -> {
+service : {
     http_request : (request : HttpRequest) -> (HttpResponse) query;
     search_apps : (text) -> (SearchResult) query;
-    upsert_app : (AppInput) -> (AppResult);
 };
-
