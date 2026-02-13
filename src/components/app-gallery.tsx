@@ -31,15 +31,14 @@ export default function AppGallery({
             key={app.id}
             to="/app/$id"
             params={{ id: String(app.id) }}
-            
-            className="group block w-75 rounded-lg overflow-hidden transition-all"
+            className="group block w-75 overflow-hidden transition-all"
           >
             {app.image_id ? (
-              <div className="overflow-hidden rounded-lg bg-secondary">
+              <div className="overflow-hidden">
                 <img
                   src={`${R2_PUBLIC_URL}/${app.image_id}_300.jpg`}
                   alt={app.title}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300 border border-white/20 rounded"
                   loading="lazy"
                 />
               </div>

@@ -34,11 +34,20 @@ function Index() {
   return (
     <div className="min-h-screen flex flex-col items-center gap-10">
 
-      <img src="/public/promptathon-logo.png" className="pt-8 w-100" />
+      <img src="/public/promptathon-logo.png" className="pt-8 w-100 px-5" />
 
+      {!isSearching && apps && (
+        <div className="w-full max-w-160 flex flex-col items-center">
+          <p className="text-lg text-center px-10">
+
+            This is the January promptahon showcase! The competition saw more than 800 registered participants and {apps.length} submitted apps. Prompt your own app into existence on <a href="https://caffeine.ai" target="_blank" rel="noreferrer" className="underline text-primary hover:text-primary/80 transition-colors"
+            >caffeine.ai</a>.
+          </p>
+        </div>
+      )}
 
       {/* Search */}
-      <div className="w-full max-w-160 px-4">
+      <div className="w-full max-w-160 px-8">
         <div className="relative flex-1">
           <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground">
             <Search size={18} />
@@ -63,18 +72,7 @@ function Index() {
           isLoading={searchLoading}
         />
       ) : (
-        <>
-          <div className="w-full max-w-160 flex flex-col items-center">
-            {apps && (
-              <p className="text-lg text-center">
-
-                This is the January promptahon showcase! The competition saw more than 800 registered participants and {apps.length} submitted apps. Prompt your own app into existence on <a href="https://caffeine.ai" target="_blank" rel="noreferrer" className="underline text-primary hover:text-primary/80 transition-colors"
-                >caffeine.ai</a>.
-              </p>
-            )}
-          </div>
-          <AppGallery apps={apps} isLoading={appsLoading} />
-        </>
+        <AppGallery apps={apps} isLoading={appsLoading} />
       )}
 
       {/* Footer */}

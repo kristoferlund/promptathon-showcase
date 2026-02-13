@@ -3,6 +3,7 @@ import type { App } from "@/server";
 import { R2_PUBLIC_URL } from "@/lib/constants";
 import ImageWithSkeleton from "@/components/image-with-skeleton";
 import ArrowLeftIcon from "@/components/icons/arrow-left";
+import SocialEmbed from "@/components/social-embed";
 
 export default function AppDetail({
   app,
@@ -59,23 +60,15 @@ export default function AppDetail({
                 </td>
               </tr>
             )}
-            {app.social_post_url && (
-              <tr className="border-b border-border">
-                <td className="py-3 pr-6 text-muted-foreground whitespace-nowrap">Announcement</td>
-                <td className="py-3">
-                  <a
-                    href={app.social_post_url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="underline text-primary hover:text-primary/80 transition-colors"
-                  >
-                    {app.social_post_url}
-                  </a>
-                </td>
-              </tr>
-            )}
           </tbody>
         </table>
+
+        {app.social_post_url && (
+          <div className="mt-12 flex flex-col items-center bg-card/50 p-5 rounded-xl">
+            <div className="text-sm text-muted-foreground mb-4 font-medium">Announcement</div>
+            <SocialEmbed url={app.social_post_url} />
+          </div>
+        )}
       </article>
     </div>
   );
