@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import type { App } from "@/server";
-import { R2_PUBLIC_URL } from "@/lib/constants";
+import { R2_PUBLIC_URL, getWinnerBadge } from "@/lib/constants";
 import ImageWithSkeleton from "@/components/image-with-skeleton";
 import ArrowLeftIcon from "@/components/icons/arrow-left";
 import SocialEmbed from "@/components/social-embed";
@@ -22,6 +22,17 @@ export default function AppDetail({
       </div>
 
       <article>
+        {(() => {
+          const badge = getWinnerBadge(Number(app.id));
+          return badge ? (
+            <div
+              className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold ${badge.bg} ${badge.border} ${badge.text} border mb-4`}
+            >
+              <span>{badge.emoji}</span>
+              {badge.label}
+            </div>
+          ) : null;
+        })()}
         <h1 className="text-4xl font-bold text-foreground my-4 leading-tight">
           {app.app_name}
         </h1>

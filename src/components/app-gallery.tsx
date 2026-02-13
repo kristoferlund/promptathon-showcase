@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { Link } from "@tanstack/react-router";
 import type { App } from "@/server";
-import { R2_PUBLIC_URL } from "@/lib/constants";
+import { R2_PUBLIC_URL, WINNER_IDS } from "@/lib/constants";
 
 function shuffle<T>(array: T[]): T[] {
   const shuffled = [...array];
@@ -29,7 +29,11 @@ export default function AppGallery({
     );
   }
 
-  const shuffledApps = useMemo(() => apps ? shuffle(apps) : [], [apps]);
+  const shuffledApps = useMemo(() => {
+    if (!apps) return [];
+    const winnerIdSet = new Set(WINNER_IDS);
+    return shuffle(apps.filter((app) => !winnerIdSet.has(Number(app.id))));
+  }, [apps]);
 
   if (!apps || apps.length === 0) {
     return null;

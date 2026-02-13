@@ -5,6 +5,7 @@ import useSearch from "@/hooks/use-search";
 import useSearchQuery from "@/hooks/use-search-query";
 import { Search } from "lucide-react";
 import SearchResults from "@/components/search-results";
+import Winners from "@/components/winners";
 import AppGallery from "@/components/app-gallery";
 
 export const Route = createFileRoute("/")({
@@ -72,7 +73,10 @@ function Index() {
           isLoading={searchLoading}
         />
       ) : (
-        <AppGallery apps={apps} isLoading={appsLoading} />
+        <>
+          <Winners apps={apps} />
+          <AppGallery apps={apps} isLoading={appsLoading} />
+        </>
       )}
 
       {/* Footer */}
