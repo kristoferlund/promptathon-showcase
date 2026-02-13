@@ -11,7 +11,7 @@ dotenv.config({ path: ".env" });
 
 export default defineConfig({
   build: {
-    outDir: "src/dist",
+    outDir: "dist",
   },
   optimizeDeps: {
     esbuildOptions: {
