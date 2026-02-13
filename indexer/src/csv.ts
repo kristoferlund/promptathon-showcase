@@ -6,11 +6,23 @@ export type Submission = {
   appName: string;
   socialPostUrl: string;
   appUrl: string;
+  aiTitle: string;
+  aiDescription: string;
 };
+
+const HEADER = [
+  '*Name*',
+  '*Enter the name of your Caffeine app*',
+  '*Please link to a social post announcing your app*',
+  '*Provide the live link to your app*',
+  '*AI Title*',
+  '*AI Description*',
+];
 
 /**
  * Parse submissions.csv and return validated Submission records.
  * Skips rows with missing/empty app URLs or obvious test/spam entries.
+ * Supports optional aiTitle and aiDescription columns (5th and 6th).
  */
 export function loadSubmissions(csvPath: string): Submission[] {
   const raw = readFileSync(csvPath, 'utf-8');
@@ -27,7 +39,9 @@ export function loadSubmissions(csvPath: string): Submission[] {
   const seenUrls = new Set<string>();
 
   for (const row of dataRows) {
-    const [authorName, appName, socialPostUrl, appUrl] = row.map((s) => s?.trim() ?? '');
+    const [authorName, appName, socialPostUrl, appUrl, aiTitle, aiDescription] = row.map(
+      (s) => s?.trim() ?? ''
+    );
 
     // Skip rows with no app URL
     if (!appUrl) continue;
@@ -47,8 +61,40 @@ export function loadSubmissions(csvPath: string): Submission[] {
       appName: appName || 'Untitled',
       socialPostUrl: socialPostUrl || '',
       appUrl: cleanUrl,
+      aiTitle: aiTitle || '',
+      aiDescription: aiDescription || '',
     });
   }
 
   return submissions;
+}
+
+/**
+ * Escape a value for CSV output (RFC 4180).
+ */
+function csvEscape(val: string): string {
+  if (val.includes(',') || val.includes('"') || val.includes('\n')) {
+    return `"${val.replace(/"/g, '""')}"`;
+  }
+  return val;
+}
+
+/**
+ * Serialize submissions back to CSV format.
+ */
+export function serializeSubmissions(submissions: Submission[]): string {
+  const lines = [HEADER.join(',')];
+  for (const s of submissions) {
+    lines.push(
+      [
+        csvEscape(s.authorName),
+        csvEscape(s.appName),
+        csvEscape(s.socialPostUrl),
+        csvEscape(s.appUrl),
+        csvEscape(s.aiTitle),
+        csvEscape(s.aiDescription),
+      ].join(',')
+    );
+  }
+  return lines.join('\n') + '\n';
 }

@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import type { App } from "@/server";
-import { R2_PUBLIC_URL, getWinnerBadge } from "@/lib/constants";
+import { getWinnerBadge } from "@/lib/constants";
 import ImageWithSkeleton from "@/components/image-with-skeleton";
 import ArrowLeftIcon from "@/components/icons/arrow-left";
 import SocialEmbed from "@/components/social-embed";
@@ -39,7 +39,7 @@ export default function AppDetail({
 
         {app.image_id && (
           <ImageWithSkeleton
-            src={`${R2_PUBLIC_URL}/${app.image_id}_1500.jpg`}
+            src={`/images/${app.image_id}_1500.jpg`}
             alt={app.title}
           />
         )}
@@ -48,7 +48,11 @@ export default function AppDetail({
           {app.description}
         </div>
 
-        <table className="w-full text-sm mt-12 pt-8 border-t border-border">
+        <table className="w-full table-fixed text-sm mt-12 pt-8 border-t border-border">
+          <colgroup>
+            <col className="w-24" />
+            <col />
+          </colgroup>
           <tbody>
             {app.author_name && (
               <tr className="border-b border-border">
@@ -59,7 +63,7 @@ export default function AppDetail({
             {app.url && (
               <tr className="border-b border-border">
                 <td className="py-3 pr-6 text-muted-foreground whitespace-nowrap">App URL</td>
-                <td className="py-3">
+                <td className="py-3 truncate">
                   <a
                     href={app.url}
                     target="_blank"
@@ -75,7 +79,7 @@ export default function AppDetail({
         </table>
 
         {app.social_post_url && (
-          <div className="mt-12 flex flex-col items-center bg-card/50 p-5 rounded-xl">
+          <div className="mt-12 flex flex-col items-center bg-card/50 p-5 rounded-xl overflow-hidden">
             <div className="text-sm text-muted-foreground mb-4 font-medium">Announcement</div>
             <SocialEmbed url={app.social_post_url} />
           </div>

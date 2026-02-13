@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import type { App } from "@/server";
-import { R2_PUBLIC_URL } from "@/lib/constants";
+
 
 export default function SearchResults({
   query,
@@ -49,7 +49,7 @@ export default function SearchResults({
             <div className="flex items-center hover:bg-card/50 rounded p-3 gap-3">
               <div className="shrink-0 w-72 rounded overflow-hidden bg-card border-white/20 border ">
                 <img
-                  src={`${R2_PUBLIC_URL}/${app.image_id}_300.jpg`}
+                  src={`/images/${app.image_id}_300.jpg`}
                   alt={app.title}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                   loading="lazy"

@@ -12,14 +12,9 @@ use router_library::{
     assets::{certify_all_assets, delete_assets},
     HttpRequestOptions,
 };
-use std::cell::RefCell;
 
 static ASSETS_DIR: Dir = include_dir!("$CARGO_MANIFEST_DIR/../../dist");
 static MIGRATIONS: &[ic_sql_migrate::Migration] = ic_sql_migrate::include_migrations!();
-
-thread_local! {
-    static R2_PUBLIC_URL: RefCell<String> = RefCell::new(String::from("https://pub-3f40be38914b4447ad73248b6888a1c1.r2.dev"));
-}
 
 fn run_migrations_and_seeds() {
     with_connection(|mut conn| {
@@ -29,17 +24,20 @@ fn run_migrations_and_seeds() {
     });
 }
 
-#[init]
-fn init() {
-    run_migrations_and_seeds();
-
-    // Certify all pre-built assets produced by Vite (JS, CSS, fonts, etc.)
+fn certify_and_delete_index() {
+    // Certify all pre-built assets produced by Vite (JS, CSS, fonts, images, etc.)
     certify_all_assets(&ASSETS_DIR);
 
     // Delete the pre-built index.html from the certified asset cache.
     // Page routes (/, /app/:id) will be generated dynamically with
     // route-specific SEO meta tags injected via minijinja on first request.
     delete_assets(vec!["/"]);
+}
+
+#[init]
+fn init() {
+    run_migrations_and_seeds();
+    certify_and_delete_index();
 }
 
 #[pre_upgrade]
@@ -50,8 +48,7 @@ fn pre_upgrade() {
 #[post_upgrade]
 fn post_upgrade() {
     run_migrations_and_seeds();
-    certify_all_assets(&ASSETS_DIR);
-    delete_assets(vec!["/"]);
+    certify_and_delete_index();
 }
 
 #[query]
@@ -64,8 +61,10 @@ fn http_request_update(req: HttpRequest) -> HttpResponse {
     ROUTES.with(|routes| router_library::http_request_update(req, routes))
 }
 
-pub fn get_r2_public_url() -> String {
-    R2_PUBLIC_URL.with(|url| url.borrow().clone())
+/// Get the base URL for serving images. Images are bundled in the canister,
+/// so this returns an empty string for canister-relative paths.
+pub fn get_image_base_url() -> String {
+    String::new()
 }
 
 // --- Candid API ---

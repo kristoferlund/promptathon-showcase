@@ -5,6 +5,7 @@
       "package": "server",
       "build": [
         "pnpm run build",
+        "cp -r indexer/images dist/images 2>/dev/null || true",
         "cargo build -p server --target wasm32-wasip1 --release",
         "wasi2ic target/wasm32-wasip1/release/server.wasm target/wasm32-wasip1/release/server_wasi2ic.wasm"
       ],

@@ -4,229 +4,175 @@ A decentralized app showcase and gallery built on the Internet Computer with AI-
 
 ## Overview
 
-Promptathon Showcase allows users to browse and search for Internet Computer applications in a gallery format with rich metadata including titles, descriptions, and screenshots. An admin-controlled indexer crawls websites, extracts and enriches metadata using AI, captures screenshots, and stores everything in the canister.
+Promptathon Showcase allows users to browse and search Internet Computer applications in a gallery format with rich metadata including titles, descriptions, and screenshots. A build-time indexer crawls submitted app URLs, extracts and enriches metadata using AI, captures screenshots, and bundles everything into the canister.
 
 **Features:**
-- 🔍 Full-text search on app titles and descriptions
-- 🤖 AI-powered metadata enrichment (OpenAI or Anthropic)
-- 📸 Dual-resolution screenshots (1500x844 and 200x112) hosted on Cloudflare R2
-- 🌐 SSR with Cyber Bunker dark theme
-- 🔐 Admin-protected upsert and delete operations
-- ⚡ SQLite backend for fast queries
+- Full-text search on app titles and descriptions
+- AI-powered metadata enrichment (OpenAI or Anthropic)
+- Dual-resolution screenshots (1500x844 and 300x169) bundled in the canister
+- React frontend with TanStack Router
+- SSR with route-specific SEO meta tags
+- SQLite backend with certified HTTP responses
 
 ## Quick Start
 
 ### Prerequisites
 
 - `dfx` CLI installed
-- Node.js/pnpm
-- Cloudflare R2 bucket (for image hosting)
+- Node.js / pnpm
 - OpenAI or Anthropic API key
 
-### Deploy Canister
+### 1. Start Local Replica
 
 ```bash
-# Set your admin principal
-ADMIN=$(dfx identity get-principal)
-
-# Stop any existing dfx instance and start fresh
 dfx stop
 dfx start --clean --background
-
-# Deploy with admin principal
-dfx deploy server --argument "(opt principal \"$ADMIN\")"
 ```
 
-**⚠️ Important:** You must pass your principal as the admin argument during deployment. Without this, you cannot add or manage apps.
+### 2. Run the Indexer
 
-### Index Apps
+The indexer crawls app URLs, generates AI metadata, and captures screenshots:
 
 ```bash
 cd indexer
-npm install
-npx playwright install chromium
-
-# Configure environment
+pnpm install
+pnpm exec playwright install chromium
 cp .env.example .env
-# Edit .env with:
-# - OPENAI_API_KEY or ANTHROPIC_API_KEY
-# - R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY
-# - R2_BUCKET_NAME, R2_PUBLIC_URL
-# - CANISTER_ID (from deploy output)
+# Edit .env with your AI API key
 
-# Run indexer
-npm run dev
+pnpm dev
 ```
 
-### Access Search UI
+This produces:
+- `src/server/src/seeds/seed_apps.sql` - SQL seed data
+- `indexer/images/` - Screenshot JPEGs
 
-```
-http://uxrrr-q7777-77774-qaaaq-cai.raw.localhost:4943/?q=search-term
-```
+Results are cached in `submissions.csv` and `indexer/images/` so re-runs skip already-processed apps. See [indexer/README.md](indexer/README.md) for details.
 
-## Managing Apps
-
-### Add/Update Apps
-
-Use the indexer to crawl and index websites. Apps are identified by URL and automatically updated if re-indexed.
+### 3. Deploy
 
 ```bash
-cd indexer
-npm run dev  # Process URLs in example.ts
+dfx deploy server
 ```
 
-### Delete Apps
+The deploy process (defined in `dfx.json`) runs these steps:
+1. `pnpm run build` - Vite builds the frontend to `dist/`
+2. `cp -r indexer/images dist/images` - Copies screenshots into the build output
+3. `cargo build` - Compiles the Rust canister, embedding `dist/` (including images) via `include_dir!`
+4. `wasi2ic` - Converts the WASM for IC deployment
 
-Use dfx to delete by ID or URL (admin-only):
+### 4. Access the App
+
+```
+http://<canister-id>.localhost:4943/
+```
+
+### Development
+
+Run the Vite dev server for frontend development with hot reload:
 
 ```bash
-# Delete by ID
-dfx canister call uxrrr-q7777-77774-qaaaq-cai delete_app_by_id '(7 : int64)'
-
-# Delete by URL
-dfx canister call uxrrr-q7777-77774-qaaaq-cai delete_app_by_url '("https://example.com")'
+pnpm run dev
 ```
+
+Images are proxied to the local canister automatically.
 
 ## Architecture
 
-**Frontend (SSR):**
-- Vite + vanilla HTML templates
-- Cyber Bunker theme (dark mode, lime green accents)
-- Routes: `/` (search), `/app/:id` (detail)
+**Frontend (React + Vite):**
+- TanStack Router with file-based routing
+- Tailwind CSS
+- IC agent for canister queries
 
 **Backend (Rust Canister):**
 - SQLite database with full-text search
-- Admin-protected endpoints: `upsert_app`, `delete_app_by_id`, `delete_app_by_url`
-- Query endpoint: `search_apps`
+- Certified HTTP asset serving
+- SSR with minijinja templates for SEO meta tags
+- Static assets (JS, CSS, images) embedded at compile time
 
 **Indexer (Node.js):**
 - Playwright for web scraping and screenshots
 - OpenAI/Anthropic for metadata enrichment
-- Cloudflare R2 for image storage
-- Candid client for canister communication
-
-## Environment Variables (Indexer)
-
-```bash
-# AI Provider (choose one)
-OPENAI_API_KEY=sk-...
-# ANTHROPIC_API_KEY=claude-...
-
-# Canister
-CANISTER_ID=uxrrr-q7777-77774-qaaaq-cai
-NETWORK=local  # or "ic"
-
-# Cloudflare R2
-R2_ACCOUNT_ID=your-account-id
-R2_ACCESS_KEY_ID=your-access-key
-R2_SECRET_ACCESS_KEY=your-secret-key
-R2_BUCKET_NAME=promptathon-images
-R2_PUBLIC_URL=https://pub-xxxxx.r2.dev
-```
-
-## Development
-
-```bash
-# Build frontend + canister
-npm run build
-
-# Deploy
-dfx deploy server --argument "(opt principal \"$(dfx identity get-principal)\")"
-
-# Build indexer
-cd indexer && npm run build
-```
-
-## Troubleshooting
-
-**Indexer fails with "No admin principal configured":**
-```bash
-# Redeploy with admin principal
-ADMIN=$(dfx identity get-principal)
-dfx canister uninstall-code server
-dfx deploy server --argument "(opt principal \"$ADMIN\")"
-```
-
-**Search returning no results:**
-- Verify apps were indexed: `dfx canister call uxrrr-q7777-77774-qaaaq-cai search_apps '("")'`
-- Check indexer logs for "✓ Upserted" messages
-
-**Screenshots not showing:**
-- Verify R2 URL in canister is correct
-- Check R2 bucket is publicly accessible
-- Test URL: `https://pub-xxxxx.r2.dev/{image_id}_200.jpg`
+- Incremental: caches results in CSV and on disk
 
 ## Project Structure
 
 ```
 .
 ├── src/
-│   ├── main.css                # Tailwind + Cyber Bunker theme
-│   ├── main.tsx               # Frontend entry
-│   ├── routes/                # Frontend routes
+│   ├── components/            # React components
+│   ├── hooks/                 # React hooks (useServer)
+│   ├── lib/                   # Constants and utilities
+│   ├── routes/                # TanStack Router file-based routes
 │   └── server/                # Rust canister
 │       ├── src/
-│       │   ├── lib.rs         # Canister init & endpoints
-│       │   ├── page/          # Database & business logic
-│       │   └── routes/        # HTTP route handlers
-│       └── migrations/        # SQLite migrations
-├── indexer/                   # Node.js indexer
+│       │   ├── lib.rs         # Canister init, HTTP handlers, Candid API
+│       │   ├── page/          # Database models & queries
+│       │   ├── routes/        # SSR route handlers
+│       │   └── seeds/         # SQL seed files (generated by indexer)
+│       └── server.did         # Candid interface
+├── indexer/                   # Node.js build-time indexer
 │   ├── src/
-│   │   ├── types.ts          # Type definitions
-│   │   ├── extractor.ts      # Playwright + screenshot
-│   │   ├── ai.ts             # OpenAI/Anthropic client
-│   │   ├── indexer.ts        # Worker pool
-│   │   ├── canister.ts       # Candid client
-│   │   └── r2.ts             # Cloudflare R2 client
-│   └── example.ts            # Example usage
-└── router_library/           # Custom routing library
+│   │   ├── indexer.ts         # Processing pipeline
+│   │   ├── extractor.ts       # Playwright screenshots
+│   │   ├── ai.ts              # OpenAI/Anthropic enrichment
+│   │   └── csv.ts             # CSV read/write
+│   ├── run.ts                 # CLI entry point
+│   ├── submissions.csv        # Input data + cached AI results
+│   └── images/                # Cached screenshots (gitignored)
+├── router_library/            # Custom IC HTTP routing library
+├── dfx.json                   # IC deployment config
+└── vite.config.ts             # Vite config with image proxy
+```
+
+## Environment Variables
+
+### Indexer (`indexer/.env`)
+
+```bash
+# AI Provider (choose one)
+# OPENAI_API_KEY=sk-...
+ANTHROPIC_API_KEY=sk-ant-...
+
+# Limit submissions to process (useful during development)
+LIMIT=5
+
+# Network: "local" for local dfx replica, "ic" for mainnet
+# Canister ID is auto-resolved from canister_ids.json
+NETWORK=local
 ```
 
 ## API Reference
 
-### Canister Endpoints
+### Candid Interface
 
-**Query (public):**
 ```candid
-search_apps(query: text) -> result<vec App, text>
+service : {
+    http_request : (HttpRequest) -> (HttpResponse) query;
+    http_request_update : (HttpRequest) -> (HttpResponse);
+    list_apps : () -> (vec App) query;
+    get_app : (int64) -> (GetAppResult) query;
+    search : (text) -> (SearchResult) query;
+};
 ```
 
-**Update (admin-only):**
-```candid
-upsert_app(input: AppInput) -> result<App, text>
-delete_app_by_id(id: int64) -> result<(), text>
-delete_app_by_url(url: text) -> result<(), text>
-```
+### Types
 
-**Types:**
 ```candid
 type App = record {
-  id : int64;
-  url : text;
-  canister_id : opt text;
-  title : text;
-  description : text;
-  image_id : opt text;
-  created_at : int64;
-  updated_at : int64;
-};
-
-type AppInput = record {
-  url : text;
-  canister_id : opt text;
-  title : text;
-  description : text;
-  image_id : opt text;
+    id : int64;
+    url : text;
+    canister_id : opt text;
+    title : text;
+    description : text;
+    image_id : opt text;
+    author_name : opt text;
+    app_name : opt text;
+    social_post_url : opt text;
+    created_at : int64;
+    updated_at : int64;
 };
 ```
-
-## Technical Details
-
-- **Database:** SQLite with full-text search on title and description
-- **Images:** JPEG at 70% quality, dual resolution (1500x844 and 200x112)
-- **Theme:** Tailwind CSS with custom Cyber Bunker palette
-- **Rendering:** Server-side HTML templates with minijinja
-- **Routing:** File-based static routing compiled at build time
 
 ## License
 

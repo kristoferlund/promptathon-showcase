@@ -24,9 +24,9 @@ pub fn handler(_: HttpRequest, params: RouteParams) -> HttpResponse<'static> {
     // Only query the DB for SEO meta tags (title, description, image)
     let (title, description, og_image) = match AppManager::get_by_id(id) {
         Ok(app) => {
-            let og = app
-                .image_id
-                .map(|img_id| format!("{}/{}_1500.jpg", crate::get_r2_public_url(), img_id));
+            let og = app.image_id.map(|img_id| {
+                format!("{}/images/{}_1500.jpg", crate::get_image_base_url(), img_id)
+            });
             (app.title, app.description, og)
         }
         Err(_) => (

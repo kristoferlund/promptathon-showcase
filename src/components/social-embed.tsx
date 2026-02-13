@@ -90,7 +90,7 @@ function XEmbed({ url }: { url: string }) {
     };
   }, [url]);
 
-  return <div ref={containerRef} className="w-full max-w-xl" />;
+  return <div ref={containerRef} className="w-full max-w-full overflow-hidden [&_iframe]:!max-w-full [&_.twitter-tweet]:mx-auto" />;
 }
 
 function TikTokEmbed({ url }: { url: string }) {
@@ -140,7 +140,7 @@ function SocialLink({ url }: { url: string }) {
       href={url}
       target="_blank"
       rel="noreferrer"
-      className="underline text-primary hover:text-primary/80 transition-colors text-sm"
+      className="underline text-primary hover:text-primary/80 transition-colors text-sm break-all"
     >
       {url}
     </a>

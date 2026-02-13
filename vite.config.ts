@@ -9,6 +9,8 @@ import { icpBindgen } from "@icp-sdk/bindgen/plugins/vite";
 
 dotenv.config({ path: ".env" });
 
+const canisterHost = `http://${process.env.CANISTER_ID_SERVER}.localhost:4943`;
+
 export default defineConfig({
   build: {
     outDir: "dist",
@@ -22,8 +24,8 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      "/api": {
-        target: "http://127.0.0.1:4943",
+      "/images": {
+        target: canisterHost,
         changeOrigin: true,
       },
     },

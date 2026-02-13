@@ -1,6 +1,3 @@
-export const R2_PUBLIC_URL =
-  "https://pub-3f40be38914b4447ad73248b6888a1c1.r2.dev";
-
 // Promptathon winner app IDs (1st, 2nd, 3rd place)
 export const WINNER_IDS: [number, number, number] = [1, 2, 3];
 

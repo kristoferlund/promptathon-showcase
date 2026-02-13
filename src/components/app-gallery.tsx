@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { Link } from "@tanstack/react-router";
 import type { App } from "@/server";
-import { R2_PUBLIC_URL, WINNER_IDS } from "@/lib/constants";
+import { WINNER_IDS } from "@/lib/constants";
 
 function shuffle<T>(array: T[]): T[] {
   const shuffled = [...array];
@@ -52,7 +52,7 @@ export default function AppGallery({
             {app.image_id ? (
               <div className="overflow-hidden">
                 <img
-                  src={`${R2_PUBLIC_URL}/${app.image_id}_300.jpg`}
+                  src={`/images/${app.image_id}_300.jpg`}
                   alt={app.title}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300 border border-white/20 rounded"
                   loading="lazy"
