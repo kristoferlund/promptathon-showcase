@@ -100,7 +100,7 @@ function SearchResults({
 }) {
   if (isLoading) {
     return (
-      <div className="w-full max-w-[640px] px-4 mt-10 pb-16">
+      <div className="w-full max-w-160 px-4 mt-10 pb-16">
         <div className="text-center text-muted-foreground text-sm">
           Searching...
         </div>
@@ -110,7 +110,7 @@ function SearchResults({
 
   if (!results || results.length === 0) {
     return (
-      <div className="w-full max-w-[640px] px-4 mt-10 pb-16">
+      <div className="w-full max-w-160 px-4 mt-10 pb-16">
         <div className="text-center text-muted-foreground text-sm">
           No results found for &quot;{query}&quot;
         </div>
@@ -119,7 +119,7 @@ function SearchResults({
   }
 
   return (
-    <div className="w-full max-w-[640px] px-4 mt-10 pb-16">
+    <div className="w-full max-w-160 px-4 mt-10 pb-16">
       <div className="text-xs text-muted-foreground mb-6 font-medium">
         {results.length} result{results.length !== 1 ? "s" : ""} for &quot;
         {query}&quot;
