@@ -35,7 +35,7 @@ function Index() {
   return (
     <div className="min-h-screen flex flex-col items-center gap-10">
 
-      <img src="/promptathon-logo.png" className="pt-8 w-100 px-5" />
+      <img src="/promptathon-logo.png" className="pt-16 w-100 px-5" />
 
       {!isSearching && apps && (
         <div className="w-full max-w-160 flex flex-col items-center">

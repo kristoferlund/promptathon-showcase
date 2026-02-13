@@ -1,5 +1,5 @@
 // Promptathon winner app IDs (1st, 2nd, 3rd place)
-export const WINNER_IDS: [number, number, number] = [1, 2, 3];
+export const WINNER_IDS: [number, number, number] = [121, 146, 98];
 
 export const PODIUM = [
   {
