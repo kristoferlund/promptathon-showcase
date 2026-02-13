@@ -6,7 +6,7 @@ export type ExtractedData = {
   metaDescription: string | null;
   extractedText: string;
   screenshotLarge: Buffer;  // 1500x844 JPEG
-  screenshotSmall: Buffer;  // 200x112 JPEG
+  screenshotSmall: Buffer;  // 300x112 JPEG
 };
 
 const MAX_TEXT_LENGTH = 50000;
@@ -60,18 +60,18 @@ export class BrowserExtractor {
       await page.setViewportSize({ width: 1500, height: 844 });
 
       // Capture large screenshot (1500x844, 16:9)
-      const screenshotLarge = await page.screenshot({ 
-        type: 'jpeg', 
-        quality: 70 
+      const screenshotLarge = await page.screenshot({
+        type: 'jpeg',
+        quality: 80
       });
 
-      // Resize to create small thumbnail (200x112, 16:9)
+      // Resize to create small thumbnail (300x169, 16:9)
       const screenshotSmall = await sharp(screenshotLarge)
-        .resize(200, 112, {
+        .resize(300, 169, {
           fit: 'cover',
           position: 'center'
         })
-        .jpeg({ quality: 70 })
+        .jpeg({ quality: 80 })
         .toBuffer();
 
       return {

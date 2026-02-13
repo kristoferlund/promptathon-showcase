@@ -44,7 +44,7 @@ export class R2Uploader {
   async uploadScreenshots(id: string, largeBuf: Buffer, smallBuf: Buffer): Promise<{ large: string; small: string }> {
     const [large, small] = await Promise.all([
       this.uploadImage(`${id}_1500.jpg`, largeBuf),
-      this.uploadImage(`${id}_200.jpg`, smallBuf),
+      this.uploadImage(`${id}_300.jpg`, smallBuf),
     ]);
 
     return { large, small };

@@ -21,7 +21,7 @@ export type PageSnapshot = {
 
   // Visual
   screenshotLarge: Buffer;  // 1500x844 JPEG
-  screenshotSmall: Buffer;  // 200x112 JPEG
+  screenshotSmall: Buffer;  // 300x169 JPEG
 
   // AI output
   aiTitle: string;

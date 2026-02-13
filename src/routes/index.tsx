@@ -34,7 +34,7 @@ function Index() {
   return (
     <div className="min-h-screen flex flex-col items-center">
       {/* Header */}
-      <div className="w-full max-w-[640px] px-4 pt-16 flex flex-col items-center">
+      <div className="w-full max-w-160 px-4 pt-16 flex flex-col items-center">
         <h1 className="font-semibold text-foreground text-4xl tracking-tight">
           Promptathon Showcase
         </h1>
@@ -46,7 +46,7 @@ function Index() {
       </div>
 
       {/* Search */}
-      <div className="w-full max-w-[640px] px-4 mt-8">
+      <div className="w-full max-w-160 px-4 mt-8">
         <div className="relative flex-1">
           <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground">
             <Search size={18} />
@@ -57,7 +57,7 @@ function Index() {
             onChange={handleChange}
             placeholder="Search apps..."
             autoComplete="off"
-            className="w-full h-12 text-[15px] pl-12 pr-4 rounded-full border border-border bg-card text-foreground placeholder:text-muted-foreground focus:bg-secondary focus:border-primary transition-all focus:outline-none"
+            className="w-full h-12 text-sm pl-12 pr-4 rounded-full border border-border bg-card text-foreground placeholder:text-muted-foreground focus:bg-secondary focus:border-primary transition-all focus:outline-none"
             autoFocus
           />
         </div>
@@ -202,62 +202,39 @@ function AppGallery({
     return null;
   }
 
-   return (
-    <div className="w-full max-w-[1264px] mx-auto px-6 mt-12 pb-16">
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, 300px)",
-          gap: "16px",
-          justifyContent: "center",
-        }}
-      >
+  return (
+    <div className="w-full max-w-316 mx-auto px-6 mt-12 pb-16">
+      <div className="grid grid-cols-[repeat(auto-fill,300px)] gap-5 justify-center">
         {apps.map((app) => (
           <Link
             key={app.id}
             to="/app/$id"
             params={{ id: String(app.id) }}
             search={{ ref: "" }}
-            className="group block rounded-lg overflow-hidden transition-all"
-            style={{ width: 300 }}
+            className="group block w-75 rounded-lg overflow-hidden transition-all"
           >
             {app.image_id ? (
-              <div
-                className="overflow-hidden rounded-lg bg-secondary"
-                style={{ width: 300, height: 169 }}
-              >
+              <div className="overflow-hidden rounded-lg bg-secondary">
                 <img
                   src={`${R2_PUBLIC_URL}/${app.image_id}_300.jpg`}
                   alt={app.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                   loading="lazy"
                 />
               </div>
             ) : (
-              <div
-                className="rounded-lg bg-secondary flex items-center justify-center"
-                style={{ width: 300, height: 169 }}
-              >
-                <span
-                  className="text-muted-foreground"
-                  style={{ fontSize: 11 }}
-                >
+              <div className="rounded-lg bg-secondary flex items-center justify-center">
+                <span className="text-muted-foreground text-xs">
                   No preview
                 </span>
               </div>
             )}
-            <div style={{ padding: "8px 2px" }}>
-              <div
-                className="font-medium text-foreground leading-tight line-clamp-1"
-                style={{ fontSize: 13 }}
-              >
+            <div className="py-2 px-0.5">
+              <div className="font-medium text-foreground leading-tight line-clamp-1">
                 {app.app_name || app.title}
               </div>
               {app.author_name && (
-                <div
-                  className="text-muted-foreground/50 leading-tight"
-                  style={{ fontSize: 11, marginTop: 2 }}
-                >
+                <div className="text-xs text-muted-foreground/50 leading-tight mt-0.5">
                   {app.author_name}
                 </div>
               )}
