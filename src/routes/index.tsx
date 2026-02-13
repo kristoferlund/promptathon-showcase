@@ -137,7 +137,7 @@ function SearchResults({
               <div className="flex gap-4 items-center">
                 <div className="flex-shrink-0 w-52 h-28 rounded overflow-hidden bg-card">
                   <img
-                    src={`${R2_PUBLIC_URL}/${app.image_id}_200.jpg`}
+                    src={`${R2_PUBLIC_URL}/${app.image_id}_300.jpg`}
                     alt={app.title}
                     className="w-full h-full object-cover"
                     loading="lazy"
@@ -202,12 +202,12 @@ function AppGallery({
     return null;
   }
 
-  return (
-    <div className="w-full px-6 mt-12 pb-16">
+   return (
+    <div className="w-full max-w-[1264px] mx-auto px-6 mt-12 pb-16">
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, 200px)",
+          gridTemplateColumns: "repeat(auto-fill, 300px)",
           gap: "16px",
           justifyContent: "center",
         }}
@@ -219,15 +219,15 @@ function AppGallery({
             params={{ id: String(app.id) }}
             search={{ ref: "" }}
             className="group block rounded-lg overflow-hidden transition-all"
-            style={{ width: 200 }}
+            style={{ width: 300 }}
           >
             {app.image_id ? (
               <div
                 className="overflow-hidden rounded-lg bg-secondary"
-                style={{ width: 200, height: 112 }}
+                style={{ width: 300, height: 169 }}
               >
                 <img
-                  src={`${R2_PUBLIC_URL}/${app.image_id}_200.jpg`}
+                  src={`${R2_PUBLIC_URL}/${app.image_id}_300.jpg`}
                   alt={app.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   loading="lazy"
@@ -236,27 +236,27 @@ function AppGallery({
             ) : (
               <div
                 className="rounded-lg bg-secondary flex items-center justify-center"
-                style={{ width: 200, height: 112 }}
+                style={{ width: 300, height: 169 }}
               >
                 <span
                   className="text-muted-foreground"
-                  style={{ fontSize: 10 }}
+                  style={{ fontSize: 11 }}
                 >
                   No preview
                 </span>
               </div>
             )}
-            <div style={{ padding: "6px 2px" }}>
+            <div style={{ padding: "8px 2px" }}>
               <div
                 className="font-medium text-foreground leading-tight line-clamp-1"
-                style={{ fontSize: 12 }}
+                style={{ fontSize: 13 }}
               >
                 {app.app_name || app.title}
               </div>
               {app.author_name && (
                 <div
                   className="text-muted-foreground/50 leading-tight"
-                  style={{ fontSize: 10, marginTop: 2 }}
+                  style={{ fontSize: 11, marginTop: 2 }}
                 >
                   {app.author_name}
                 </div>
