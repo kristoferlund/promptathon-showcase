@@ -10,10 +10,10 @@ pub fn handler(_: HttpRequest, _: RouteParams) -> HttpResponse<'static> {
     let env = Environment::new();
     let template = env.template_from_str(html).unwrap();
     let mut ctx = HashMap::new();
-    ctx.insert("title", "Promptathon Showcase".to_string());
+    ctx.insert("title", "Caffeine January Promptathon Showcase".to_string());
     ctx.insert(
         "description",
-        "A gallery showcasing apps built on the Internet Computer".to_string(),
+        "A gallery showcasing apps submitted to teh January Caffeine promptathon.".to_string(),
     );
     ctx.insert("og_image", "/og-image.png".to_string());
     let rendered = template.render(ctx).unwrap();
