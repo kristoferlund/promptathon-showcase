@@ -1,6 +1,16 @@
+import { useMemo } from "react";
 import { Link } from "@tanstack/react-router";
 import type { App } from "@/server";
 import { R2_PUBLIC_URL } from "@/lib/constants";
+
+function shuffle<T>(array: T[]): T[] {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
 
 export default function AppGallery({
   apps,
@@ -19,6 +29,8 @@ export default function AppGallery({
     );
   }
 
+  const shuffledApps = useMemo(() => apps ? shuffle(apps) : [], [apps]);
+
   if (!apps || apps.length === 0) {
     return null;
   }
@@ -26,7 +38,7 @@ export default function AppGallery({
   return (
     <div className="w-full max-w-316 mx-auto px-6 pb-16">
       <div className="grid grid-cols-[repeat(auto-fill,300px)] gap-5 justify-center">
-        {apps.map((app) => (
+        {shuffledApps.map((app) => (
           <Link
             key={app.id}
             to="/app/$id"
