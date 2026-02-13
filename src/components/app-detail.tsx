@@ -6,20 +6,17 @@ import ArrowLeftIcon from "@/components/icons/arrow-left";
 
 export default function AppDetail({
   app,
-  searchRef,
 }: {
   app: App;
-  searchRef: string;
 }) {
   return (
     <div className="max-w-3xl mx-auto px-8 py-12">
       <div className="mb-12">
         <Link
           to="/"
-          search={{ q: searchRef || "" }}
           className="hover:text-primary/80 no-underline text-sm inline-flex items-center gap-2 transition-colors"
         >
-          <ArrowLeftIcon className="w-5 h-5" /> {searchRef ? "Search" : "Back"}
+          <ArrowLeftIcon className="w-5 h-5" /> Back
         </Link>
       </div>
 

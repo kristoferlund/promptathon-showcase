@@ -43,7 +43,7 @@ export default function SearchResults({
             key={app.id}
             to="/app/$id"
             params={{ id: String(app.id) }}
-            search={{ ref: query }}
+            
             className="block group"
           >
             <div className="flex items-center hover:bg-card/50 rounded p-3 gap-3">

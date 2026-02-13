@@ -5,14 +5,10 @@ import ArrowLeftIcon from "@/components/icons/arrow-left";
 
 export const Route = createFileRoute("/app/$id")({
   component: AppDetailRoute,
-  validateSearch: (search: Record<string, unknown>) => ({
-    ref: (search.ref as string) || "",
-  }),
 });
 
 function AppDetailRoute() {
   const { id } = Route.useParams();
-  const { ref: searchRef } = Route.useSearch();
   const { data: app, isLoading, error } = useGetApp(Number(id));
 
   if (isLoading) {
@@ -29,7 +25,6 @@ function AppDetailRoute() {
         <div className="mb-12">
           <Link
             to="/"
-            search={{ q: "" }}
             className="text-primary hover:text-primary/80 no-underline text-sm inline-flex items-center gap-2 transition-colors"
           >
             <ArrowLeftIcon className="w-4 h-4" /> Back
@@ -42,5 +37,5 @@ function AppDetailRoute() {
     );
   }
 
-  return <AppDetail app={app} searchRef={searchRef} />;
+  return <AppDetail app={app} />;
 }

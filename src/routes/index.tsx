@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
 import { useDebouncer } from "@tanstack/react-pacer";
 import useListApps from "@/hooks/use-list-apps";
 import useSearch from "@/hooks/use-search";
+import useSearchQuery from "@/hooks/use-search-query";
 import { Search } from "lucide-react";
 import SearchResults from "@/components/search-results";
 import AppGallery from "@/components/app-gallery";
@@ -12,15 +12,14 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  const [query, setQuery] = useState("");
-  const [debouncedQuery, setDebouncedQuery] = useState("");
+  const { query, setQuery, debouncedQuery, setDebouncedQuery } = useSearchQuery();
   const { data: apps, isLoading: appsLoading } = useListApps();
   const { data: searchResults, isLoading: searchLoading } = useSearch(
     debouncedQuery,
   );
 
   const debouncer = useDebouncer(
-    (value: string) => setDebouncedQuery(value.trim()),
+    (value: string) => { setDebouncedQuery(value.trim()); },
     { wait: 500 },
   );
 

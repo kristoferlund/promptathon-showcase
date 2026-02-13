@@ -31,7 +31,7 @@ export default function AppGallery({
             key={app.id}
             to="/app/$id"
             params={{ id: String(app.id) }}
-            search={{ ref: "" }}
+            
             className="group block w-75 rounded-lg overflow-hidden transition-all"
           >
             {app.image_id ? (
