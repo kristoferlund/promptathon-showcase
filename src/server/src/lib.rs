@@ -14,7 +14,7 @@ use router_library::{
 };
 use std::cell::RefCell;
 
-static ASSETS_DIR: Dir = include_dir!("$CARGO_MANIFEST_DIR/../dist");
+static ASSETS_DIR: Dir = include_dir!("$CARGO_MANIFEST_DIR/../../dist");
 static MIGRATIONS: &[ic_sql_migrate::Migration] = ic_sql_migrate::include_migrations!();
 
 thread_local! {

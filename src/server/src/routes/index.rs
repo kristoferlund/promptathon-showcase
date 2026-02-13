@@ -6,7 +6,7 @@ use minijinja::Environment;
 use router_library::router::RouteParams;
 
 pub fn handler(_: HttpRequest, _: RouteParams) -> HttpResponse<'static> {
-    let html = include_str!("../../../dist/index.html");
+    let html = include_str!("../../../../dist/index.html");
     let env = Environment::new();
     let template = env.template_from_str(html).unwrap();
     let mut ctx = HashMap::new();

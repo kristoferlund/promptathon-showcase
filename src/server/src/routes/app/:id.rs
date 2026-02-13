@@ -7,7 +7,7 @@ use minijinja::Environment;
 use router_library::router::RouteParams;
 
 pub fn handler(_: HttpRequest, params: RouteParams) -> HttpResponse<'static> {
-    let html = include_str!("../../../../dist/index.html");
+    let html = include_str!("../../../../../dist/index.html");
 
     let id_str = params.get("id").unwrap();
     let id: i64 = match id_str.parse() {
