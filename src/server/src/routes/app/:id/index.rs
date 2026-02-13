@@ -7,7 +7,7 @@ use minijinja::Environment;
 use router_library::router::RouteParams;
 
 pub fn handler(_: HttpRequest, params: RouteParams) -> HttpResponse<'static> {
-    let html = include_str!("../../../../../dist/index.html");
+    let html = include_str!("../../../../../../dist/index.html");
 
     let id_str = params.get("id").unwrap();
     let id: i64 = match id_str.parse() {
@@ -24,15 +24,13 @@ pub fn handler(_: HttpRequest, params: RouteParams) -> HttpResponse<'static> {
     // Only query the DB for SEO meta tags (title, description, image)
     let (title, description, og_image) = match AppManager::get_by_id(id) {
         Ok(app) => {
-            let og = app.image_id.map(|img_id| {
-                format!("{}/images/{}_1500.jpg", crate::get_image_base_url(), img_id)
-            });
+            let og = format!("/app/{}/og.png", id);
             (app.title, app.description, og)
         }
         Err(_) => (
             "App Not Found".to_string(),
             "The requested app could not be found".to_string(),
-            None,
+            String::new(),
         ),
     };
 
@@ -41,7 +39,7 @@ pub fn handler(_: HttpRequest, params: RouteParams) -> HttpResponse<'static> {
     let mut ctx = HashMap::new();
     ctx.insert("title".to_string(), title);
     ctx.insert("description".to_string(), description);
-    ctx.insert("og_image".to_string(), og_image.unwrap_or_default());
+    ctx.insert("og_image".to_string(), og_image);
     let rendered = template.render(ctx).unwrap();
 
     HttpResponse::builder()

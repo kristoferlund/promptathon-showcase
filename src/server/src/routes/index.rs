@@ -15,6 +15,7 @@ pub fn handler(_: HttpRequest, _: RouteParams) -> HttpResponse<'static> {
         "description",
         "A gallery showcasing apps built on the Internet Computer".to_string(),
     );
+    ctx.insert("og_image", "/og-image.png".to_string());
     let rendered = template.render(ctx).unwrap();
 
     HttpResponse::builder()

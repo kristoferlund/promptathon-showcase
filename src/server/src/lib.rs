@@ -1,4 +1,5 @@
 mod __route_tree;
+mod ogimage;
 mod page;
 mod routes;
 mod seeds;

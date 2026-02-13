@@ -1,2 +1,2 @@
-#[path = "./:id.rs"]
+#[path = "./:id/mod.rs"]
 pub mod id;

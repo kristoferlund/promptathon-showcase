@@ -6,7 +6,8 @@ thread_local! {
         let mut root = RouteNode::new(NodeType::Static("".into()));
         root.insert("", routes::index::handler);
         root.insert("*", routes::__any::handler);
-        root.insert("/app/:id", routes::app::id::handler);
+        root.insert("/app/:id", routes::app::id::index::handler);
+        root.insert("/app/:id/og.png", routes::app::id::og_png::handler);
         root
     };
 }

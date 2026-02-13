@@ -1,0 +1,25 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630"
+     xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink">
+  <!-- Background image -->
+  <image x="0" y="0" width="1200" height="630"
+         xlink:href="{{background_data_uri}}"
+         preserveAspectRatio="xMidYMid slice"/>
+
+  <!-- App name -->
+  <text x="600" y="130" font-family="Sohne, sans-serif" font-size="48" font-weight="500"
+        fill="white" text-anchor="middle">{{app_name}}</text>
+
+  <!-- App title (shorter description) -->
+  {{#if app_title}}
+  <text x="600" y="175" font-family="Sohne, sans-serif" font-size="24" font-weight="500"
+        fill="#a1a1aa" text-anchor="middle">{{app_title}}</text>
+  {{/if}}
+
+  <!-- Thumbnail image (centered below title) -->
+  {{#if thumbnail_data_uri}}
+  <image x="350" y="230" width="500" height="390"
+         xlink:href="{{thumbnail_data_uri}}"
+         preserveAspectRatio="xMidYMin meet"/>
+  {{/if}}
+</svg>
