@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import type { App } from "@/server";
 import { WINNER_IDS } from "@/lib/constants";
@@ -12,6 +12,37 @@ function shuffle<T>(array: T[]): T[] {
   return shuffled;
 }
 
+function SkeletonCard() {
+  return (
+    <div className="w-75 overflow-hidden">
+      <div className="w-full aspect-video animate-pulse rounded bg-muted" />
+      <div className="flex flex-col gap-2 pt-3">
+        <div className="h-4 w-4/5 animate-pulse rounded bg-muted" />
+        <div className="h-3 w-2/5 animate-pulse rounded bg-muted" />
+      </div>
+    </div>
+  );
+}
+
+function CardImage({ src, alt }: { src: string; alt: string }) {
+  const [loaded, setLoaded] = useState(false);
+
+  return (
+    <div className="overflow-hidden relative">
+      {!loaded && (
+        <div className="w-full aspect-video animate-pulse rounded bg-muted" />
+      )}
+      <img
+        src={src}
+        alt={alt}
+        className={`w-full h-full object-cover group-hover:scale-110 transition-transform duration-300 border border-white/20 rounded ${loaded ? "" : "absolute inset-0 opacity-0"}`}
+        loading="lazy"
+        onLoad={() => setLoaded(true)}
+      />
+    </div>
+  );
+}
+
 export default function AppGallery({
   apps,
   isLoading,
@@ -21,9 +52,11 @@ export default function AppGallery({
 }) {
   if (isLoading) {
     return (
-      <div className="w-full px-6 mt-12 pb-16">
-        <div className="text-center text-muted-foreground text-sm">
-          Loading apps...
+      <div className="w-full max-w-316 mx-auto px-6 pb-16">
+        <div className="grid grid-cols-[repeat(auto-fill,300px)] gap-5 justify-center">
+          {Array.from({ length: 9 }, (_, i) => (
+            <SkeletonCard key={i} />
+          ))}
         </div>
       </div>
     );
@@ -50,27 +83,23 @@ export default function AppGallery({
             className="group block w-75 overflow-hidden transition-all"
           >
             {app.image_id ? (
-              <div className="overflow-hidden">
-                <img
-                  src={`/images/${app.image_id}_300.jpg`}
-                  alt={app.title}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300 border border-white/20 rounded"
-                  loading="lazy"
-                />
-              </div>
+              <CardImage
+                src={`/images/${app.image_id}_300.jpg`}
+                alt={app.title}
+              />
             ) : (
-              <div className="rounded-lg bg-secondary flex items-center justify-center">
+              <div className="rounded bg-secondary flex items-center justify-center aspect-video">
                 <span className="text-muted-foreground text-xs">
                   No preview
                 </span>
               </div>
             )}
-            <div className="flex flex-col gap-1 pt-2">
-              <div className="font-medium text-foreground leading-tight line-clamp-2">
+            <div className="flex flex-col gap-1 pt-3">
+              <div className="font-medium text-foreground line-clamp-2">
                 {app.title || app.app_name}
               </div>
               {app.author_name && (
-                <div className="text-xs text-muted-foreground/50 leading-tight">
+                <div className="text-xs text-muted-foreground pt-1">
                   {app.author_name}
                 </div>
               )}

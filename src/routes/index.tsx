@@ -74,7 +74,7 @@ function Index() {
         />
       ) : (
         <>
-          <Winners apps={apps} />
+          <Winners apps={apps} isLoading={appsLoading} />
           <AppGallery apps={apps} isLoading={appsLoading} />
         </>
       )}

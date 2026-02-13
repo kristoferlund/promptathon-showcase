@@ -13,7 +13,7 @@ pub fn handler(_: HttpRequest, _: RouteParams) -> HttpResponse<'static> {
     ctx.insert("title", "Caffeine January Promptathon Showcase".to_string());
     ctx.insert(
         "description",
-        "A gallery showcasing apps submitted to teh January Caffeine promptathon.".to_string(),
+        "A gallery showcasing apps submitted to the January Caffeine promptathon.".to_string(),
     );
     ctx.insert("og_image", "/og-image.png".to_string());
     let rendered = template.render(ctx).unwrap();

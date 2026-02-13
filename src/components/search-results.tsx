@@ -43,7 +43,7 @@ export default function SearchResults({
             key={app.id}
             to="/app/$id"
             params={{ id: String(app.id) }}
-            
+
             className="block group"
           >
             <div className="flex items-center hover:bg-card/50 rounded p-3 gap-3">
@@ -56,14 +56,14 @@ export default function SearchResults({
                 />
               </div>
               <div className="flex-1 min-w-0">
-                <div className="font-medium text-foreground leading-tight line-clamp-1">
+                <div className="font-medium line-clamp-1">
                   {app.app_name || app.title}
                 </div>
-                <div className="text-muted-foreground text-sm leading-relaxed line-clamp-4">
+                <div className="text-sm line-clamp-4">
                   {app.description}
                 </div>
                 {app.author_name && (
-                  <div className="text-xs text-muted-foreground/50 leading-tight mt-0.5">
+                  <div className="text-xs text-muted-foreground mt-1">
                     {app.author_name}
                   </div>
                 )}

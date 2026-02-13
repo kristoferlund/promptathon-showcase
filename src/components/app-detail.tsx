@@ -33,7 +33,7 @@ export default function AppDetail({
             </div>
           ) : null;
         })()}
-        <h1 className="text-4xl font-bold text-foreground my-4 leading-tight">
+        <h1 className="text-4xl font-semibold text-foreground my-4">
           {app.app_name}
         </h1>
 
