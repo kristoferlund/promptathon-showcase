@@ -50,8 +50,8 @@ export default function Winners({
                 </div>
               )}
               <div className="py-2 px-0.5">
-                <div className="font-medium text-foreground leading-tight line-clamp-1">
-                  {app.app_name || app.title}
+                <div className="font-medium text-foreground leading-tight line-clamp-2">
+                  {app.title || app.app_name}
                 </div>
                 {app.author_name && (
                   <div className="text-xs text-muted-foreground/50 leading-tight mt-0.5">
