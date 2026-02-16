@@ -11,15 +11,15 @@
         fill="white" text-anchor="middle">{{app_name}}</text>
 
   <!-- App title (shorter description) -->
-  {{#if app_title}}
+  {% if app_title %}
   <text x="600" y="175" font-family="Sohne, sans-serif" font-size="24" font-weight="500"
         fill="#a1a1aa" text-anchor="middle">{{app_title}}</text>
-  {{/if}}
+  {% endif %}
 
   <!-- Thumbnail image (centered below title) -->
-  {{#if thumbnail_data_uri}}
+  {% if thumbnail_data_uri %}
   <image x="350" y="230" width="500" height="390"
          xlink:href="{{thumbnail_data_uri}}"
          preserveAspectRatio="xMidYMin meet"/>
-  {{/if}}
+  {% endif %}
 </svg>

@@ -1,12 +1,11 @@
 use std::sync::Arc;
 
-use handlebars::Handlebars;
 use include_dir::Dir;
+use minijinja::Environment;
 use resvg::{
     tiny_skia::{self, Pixmap},
     usvg::{fontdb, Options, Tree},
 };
-use serde_json::json;
 
 static OGIMAGE_TEMPLATE: &str = include_str!("includes/ogimage_template.svg");
 static BG_IMAGE_DATA: &[u8] = include_bytes!("includes/og-background.png");
@@ -40,17 +39,20 @@ pub fn render(
         })
     });
 
-    // Render the SVG template with Handlebars
-    let handlebars = Handlebars::new();
-    let data = json!({
-        "app_name": app_name,
-        "app_title": app_title,
-        "background_data_uri": background_data_uri,
-        "thumbnail_data_uri": thumbnail_data_uri,
-    });
-    let svg_str = handlebars
-        .render_template(OGIMAGE_TEMPLATE, &data)
-        .map_err(|e| format!("Handlebars render error: {e}"))?;
+    // Render the SVG template with MiniJinja
+    let mut env = Environment::new();
+    env.add_template("og", OGIMAGE_TEMPLATE)
+        .map_err(|e| format!("Template parse error: {e}"))?;
+    let tmpl = env.get_template("og").unwrap();
+    let ctx = minijinja::context! {
+        app_name => app_name,
+        app_title => app_title,
+        background_data_uri => background_data_uri,
+        thumbnail_data_uri => thumbnail_data_uri,
+    };
+    let svg_str = tmpl
+        .render(ctx)
+        .map_err(|e| format!("Template render error: {e}"))?;
 
     // Set up fontdb with a bundled font (WASM has no system fonts)
     let mut fontdb = fontdb::Database::new();
