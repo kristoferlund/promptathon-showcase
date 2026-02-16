@@ -3,7 +3,8 @@ import { useDebouncer } from "@tanstack/react-pacer";
 import useListApps from "@/hooks/use-list-apps";
 import useSearch from "@/hooks/use-search";
 import useSearchQuery from "@/hooks/use-search-query";
-import { Search } from "lucide-react";
+import { Search, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import SearchResults from "@/components/search-results";
 import Winners from "@/components/winners";
 import AppGallery from "@/components/app-gallery";
@@ -59,9 +60,19 @@ function Index() {
             onChange={handleChange}
             placeholder="Search apps..."
             autoComplete="off"
-            className="w-full h-12 text-sm pl-12 pr-4 rounded-full border border-border bg-card text-foreground placeholder:text-muted-foreground focus:bg-secondary focus:border-primary transition-all focus:outline-none"
+            className="w-full h-12 text-sm pl-12 pr-10 rounded-full border border-border bg-card text-foreground placeholder:text-muted-foreground focus:bg-secondary focus:border-primary transition-all focus:outline-none"
             autoFocus
           />
+          {query && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full text-muted-foreground"
+              onClick={() => { setQuery(""); setDebouncedQuery(""); }}
+            >
+              <X size={16} />
+            </Button>
+          )}
         </div>
       </div>
 
