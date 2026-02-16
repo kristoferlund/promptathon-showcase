@@ -68,7 +68,7 @@ export default function AppDetail({
                     href={app.url}
                     target="_blank"
                     rel="noreferrer"
-                    className="underline text-primary hover:text-primary/80 transition-colors"
+                    className="underline decoration-2 underline-offset-2 text-primary hover:text-primary/80 transition-colors"
                   >
                     {app.url}
                   </a>
