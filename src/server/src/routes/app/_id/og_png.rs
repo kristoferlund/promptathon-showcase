@@ -1,7 +1,6 @@
 use std::borrow::Cow;
 
 use crate::page::AppManager;
-use crate::ASSETS_DIR;
 use ic_asset_router::RouteContext;
 use ic_http_certification::{HttpResponse, StatusCode};
 
@@ -38,9 +37,7 @@ pub fn get(ctx: RouteContext<Params>) -> HttpResponse<'static> {
     } else {
         None
     };
-    let image_id = app.image_id.as_deref();
-
-    match crate::ogimage::render(app_name, app_title, image_id, &ASSETS_DIR) {
+    match crate::ogimage::render(app_name, app_title) {
         Ok(png_bytes) => HttpResponse::builder()
             .with_headers(vec![("Content-Type".into(), "image/png".into())])
             .with_status_code(StatusCode::OK)
