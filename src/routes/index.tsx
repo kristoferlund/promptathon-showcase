@@ -7,6 +7,7 @@ import { Search } from "lucide-react";
 import SearchResults from "@/components/search-results";
 import Winners from "@/components/winners";
 import AppGallery from "@/components/app-gallery";
+import PromptathonLogo from "@/components/promptathon-logo";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -35,23 +36,12 @@ function Index() {
   return (
     <div className="min-h-screen flex flex-col items-center gap-10">
 
-      <picture>
-        <source srcSet="/promptathon-logo.webp" type="image/webp" />
-        <img
-          src="/promptathon-logo.png"
-          alt="You Chat AI Builds - Online Promptathon"
-          width={864}
-          height={460}
-          fetchPriority="high"
-          className="pt-16 w-100 px-5"
-        />
-      </picture>
+      <PromptathonLogo className="pt-16 w-100 px-5" />
 
-      {!isSearching && apps && (
+      {!isSearching && (
         <div className="w-full max-w-160 flex flex-col items-center">
           <p className="text-lg text-center px-10">
-
-            This is the January promptahon showcase! The competition saw more than 800 registered participants and {apps.length} submitted apps. Prompt your own app into existence on <a href="https://caffeine.ai" target="_blank" rel="noreferrer" className="underline decoration-2 underline-offset-2 text-primary hover:text-primary/80 transition-colors"
+            This is the January promptahon showcase! The competition saw more than 800 registered participants and {apps ? apps.length : "500+"} submitted apps. Prompt your own app into existence on <a href="https://caffeine.ai" target="_blank" rel="noreferrer" className="underline decoration-2 underline-offset-2 text-primary hover:text-primary/80 transition-colors"
             >caffeine.ai</a>.
           </p>
         </div>
@@ -90,7 +80,7 @@ function Index() {
       )}
 
       {/* Footer */}
-      <footer className="pb-8 text-center text-muted-foreground text-xs mt-auto">
+      <footer className="pb-8 text-center text-muted-foreground text-xs">
         Running on the{" "}
         <a
           href="https://internetcomputer.org"

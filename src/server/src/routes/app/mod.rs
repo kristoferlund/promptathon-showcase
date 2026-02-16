@@ -1,2 +1,2 @@
-#[path = "./:id/mod.rs"]
-pub mod id;
+#[allow(non_snake_case)]
+pub mod _id;

@@ -2,12 +2,13 @@ use std::borrow::Cow;
 
 use crate::page::AppManager;
 use crate::ASSETS_DIR;
-use ic_http_certification::{HttpRequest, HttpResponse, StatusCode};
-use router_library::router::RouteParams;
+use ic_asset_router::RouteContext;
+use ic_http_certification::{HttpResponse, StatusCode};
 
-pub fn handler(_: HttpRequest, params: RouteParams) -> HttpResponse<'static> {
-    let id_str = params.get("id").unwrap();
-    let id: i64 = match id_str.parse() {
+use super::Params;
+
+pub fn get(ctx: RouteContext<Params>) -> HttpResponse<'static> {
+    let id: i64 = match ctx.params.id.parse() {
         Ok(id) => id,
         Err(_) => {
             return HttpResponse::builder()

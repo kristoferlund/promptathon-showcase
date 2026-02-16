@@ -28,14 +28,14 @@ function CardImage({ src, alt }: { src: string; alt: string }) {
   const [loaded, setLoaded] = useState(false);
 
   return (
-    <div className="overflow-hidden relative">
+    <div className="overflow-hidden relative aspect-video rounded">
       {!loaded && (
-        <div className="w-full aspect-video animate-pulse rounded bg-muted" />
+        <div className="absolute inset-0 animate-pulse bg-muted" />
       )}
       <img
         src={src}
         alt={alt}
-        className={`w-full h-full object-cover group-hover:scale-110 transition-transform duration-300 border border-white/20 rounded ${loaded ? "" : "absolute inset-0 opacity-0"}`}
+        className={`w-full h-full object-cover group-hover:scale-110 transition-transform duration-300 border border-white/20 rounded ${loaded ? "opacity-100" : "opacity-0"}`}
         loading="lazy"
         onLoad={() => setLoaded(true)}
       />

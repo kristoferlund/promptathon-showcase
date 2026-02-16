@@ -1,18 +1,20 @@
-mod __route_tree;
 mod ogimage;
 mod page;
 mod routes;
 mod seeds;
 
-use __route_tree::ROUTES;
+mod route_tree {
+    include!(concat!(env!("OUT_DIR"), "/__route_tree.rs"));
+}
+
+use ic_asset_router::{
+    assets::{certify_all_assets, delete_assets},
+    set_asset_config, AssetConfig, HttpRequestOptions,
+};
 use ic_cdk::{init, post_upgrade, pre_upgrade, query, update};
 use ic_http_certification::{HttpRequest, HttpResponse};
 use ic_rusqlite::{close_connection, with_connection, Connection};
 use include_dir::{include_dir, Dir};
-use router_library::{
-    assets::{certify_all_assets, delete_assets},
-    HttpRequestOptions,
-};
 
 static ASSETS_DIR: Dir = include_dir!("$CARGO_MANIFEST_DIR/../../dist");
 static MIGRATIONS: &[ic_sql_migrate::Migration] = ic_sql_migrate::include_migrations!();
@@ -25,7 +27,19 @@ fn run_migrations_and_seeds() {
     });
 }
 
-fn certify_and_delete_index() {
+fn setup_and_certify() {
+    // Configure the asset router:
+    // - Static assets (Vite bundles with content hashes): cached 1 year, immutable
+    // - Dynamic assets (server-rendered HTML with SEO tags): cached 1 month
+    // - Permissive security headers: suitable for SPA loading bundled fonts
+    set_asset_config(AssetConfig {
+        cache_control: ic_asset_router::CacheControl {
+            dynamic_assets: "public, max-age=2592000".into(),
+            ..ic_asset_router::CacheControl::default()
+        },
+        ..AssetConfig::default()
+    });
+
     // Certify all pre-built assets produced by Vite (JS, CSS, fonts, images, etc.)
     certify_all_assets(&ASSETS_DIR);
 
@@ -38,7 +52,7 @@ fn certify_and_delete_index() {
 #[init]
 fn init() {
     run_migrations_and_seeds();
-    certify_and_delete_index();
+    setup_and_certify();
 }
 
 #[pre_upgrade]
@@ -49,17 +63,18 @@ fn pre_upgrade() {
 #[post_upgrade]
 fn post_upgrade() {
     run_migrations_and_seeds();
-    certify_and_delete_index();
+    setup_and_certify();
 }
 
 #[query]
 pub fn http_request(req: HttpRequest) -> HttpResponse {
-    ROUTES.with(|routes| router_library::http_request(req, routes, HttpRequestOptions::default()))
+    route_tree::ROUTES
+        .with(|routes| ic_asset_router::http_request(req, routes, HttpRequestOptions::default()))
 }
 
 #[update]
 fn http_request_update(req: HttpRequest) -> HttpResponse {
-    ROUTES.with(|routes| router_library::http_request_update(req, routes))
+    route_tree::ROUTES.with(|routes| ic_asset_router::http_request_update(req, routes))
 }
 
 /// Get the base URL for serving images. Images are bundled in the canister,

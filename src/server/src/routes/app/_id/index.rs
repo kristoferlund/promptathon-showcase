@@ -2,15 +2,16 @@ use std::borrow::Cow;
 use std::collections::HashMap;
 
 use crate::page::AppManager;
-use ic_http_certification::{HttpRequest, HttpResponse, StatusCode};
+use ic_asset_router::RouteContext;
+use ic_http_certification::{HttpResponse, StatusCode};
 use minijinja::Environment;
-use router_library::router::RouteParams;
 
-pub fn handler(_: HttpRequest, params: RouteParams) -> HttpResponse<'static> {
+use super::Params;
+
+pub fn get(ctx: RouteContext<Params>) -> HttpResponse<'static> {
     let html = include_str!("../../../../../../dist/index.html");
 
-    let id_str = params.get("id").unwrap();
-    let id: i64 = match id_str.parse() {
+    let id: i64 = match ctx.params.id.parse() {
         Ok(id) => id,
         Err(_) => {
             return HttpResponse::builder()
@@ -24,7 +25,7 @@ pub fn handler(_: HttpRequest, params: RouteParams) -> HttpResponse<'static> {
     // Only query the DB for SEO meta tags (title, description, image)
     let (title, description, og_image) = match AppManager::get_by_id(id) {
         Ok(app) => {
-            let og = format!("/app/{}/og.png", id);
+            let og = format!("/app/{}/og_png", id);
             (app.title, app.description, og)
         }
         Err(_) => (
@@ -36,11 +37,11 @@ pub fn handler(_: HttpRequest, params: RouteParams) -> HttpResponse<'static> {
 
     let env = Environment::new();
     let template = env.template_from_str(html).unwrap();
-    let mut ctx = HashMap::new();
-    ctx.insert("title".to_string(), title);
-    ctx.insert("description".to_string(), description);
-    ctx.insert("og_image".to_string(), og_image);
-    let rendered = template.render(ctx).unwrap();
+    let mut tpl_ctx = HashMap::new();
+    tpl_ctx.insert("title".to_string(), title);
+    tpl_ctx.insert("description".to_string(), description);
+    tpl_ctx.insert("og_image".to_string(), og_image);
+    let rendered = template.render(tpl_ctx).unwrap();
 
     HttpResponse::builder()
         .with_headers(vec![("Content-Type".into(), "text/html".into())])
