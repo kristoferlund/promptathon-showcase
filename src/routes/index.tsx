@@ -36,7 +36,7 @@ function Index() {
   return (
     <div className="min-h-screen flex flex-col items-center gap-10">
 
-      <PromptathonLogo className="pt-16 w-100 px-5" />
+      <PromptathonLogo className="pt-10 w-100 px-5" />
 
       {!isSearching && (
         <div className="w-full max-w-160 flex flex-col items-center">
