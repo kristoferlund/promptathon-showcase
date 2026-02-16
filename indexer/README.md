@@ -44,7 +44,7 @@ pnpm dev
 
 The indexer produces two outputs:
 
-- `src/server/src/seeds/seed_apps.sql` - SQL seed file baked into the canister
+- `server/src/seeds/seed_apps.sql` - SQL seed file baked into the canister
 - `indexer/images/` - Screenshot JPEGs bundled into the canister at deploy time
 
 Then deploy the canister from the project root:

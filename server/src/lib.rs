@@ -16,7 +16,7 @@ use ic_http_certification::{HttpRequest, HttpResponse};
 use ic_rusqlite::{close_connection, with_connection, Connection};
 use include_dir::{include_dir, Dir};
 
-static ASSETS_DIR: Dir = include_dir!("$CARGO_MANIFEST_DIR/../../dist");
+static ASSETS_DIR: Dir = include_dir!("$CARGO_MANIFEST_DIR/../dist");
 static MIGRATIONS: &[ic_sql_migrate::Migration] = ic_sql_migrate::include_migrations!();
 
 fn run_migrations_and_seeds() {

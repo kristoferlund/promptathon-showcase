@@ -37,7 +37,7 @@ export default defineConfig({
     tailwindcss(),
     tanstackRouter({ target: "react", autoCodeSplitting: true }),
     icpBindgen({
-      didFile: "./src/server/server.did",
+      didFile: "./server/server.did",
       outDir: "./src",
     }),
   ],

@@ -1,7 +1,7 @@
 {
   "canisters": {
     "server": {
-      "candid": "src/server/server.did",
+      "candid": "server/server.did",
       "package": "server",
       "build": [
         "pnpm run build",

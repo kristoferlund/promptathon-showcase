@@ -9,7 +9,7 @@ use minijinja::Environment;
 use super::Params;
 
 pub fn get(ctx: RouteContext<Params>) -> HttpResponse<'static> {
-    let html = include_str!("../../../../../../dist/index.html");
+    let html = include_str!("../../../../../dist/index.html");
 
     let id: i64 = match ctx.params.id.parse() {
         Ok(id) => id,

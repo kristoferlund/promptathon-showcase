@@ -44,7 +44,7 @@ pnpm dev
 ```
 
 This produces:
-- `src/server/src/seeds/seed_apps.sql` - SQL seed data
+- `server/src/seeds/seed_apps.sql` - SQL seed data
 - `indexer/images/` - Screenshot JPEGs
 
 Results are cached in `submissions.csv` and `indexer/images/` so re-runs skip already-processed apps. See [indexer/README.md](indexer/README.md) for details.

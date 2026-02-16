@@ -6,7 +6,7 @@ use ic_http_certification::{HttpResponse, StatusCode};
 use minijinja::Environment;
 
 pub fn get(_ctx: RouteContext<()>) -> HttpResponse<'static> {
-    let html = include_str!("../../../../dist/index.html");
+    let html = include_str!("../../../dist/index.html");
     let env = Environment::new();
     let template = env.template_from_str(html).unwrap();
     let mut ctx = HashMap::new();
