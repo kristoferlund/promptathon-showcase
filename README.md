@@ -19,7 +19,7 @@ server/src/routes/
 └── app/
     └── _id/
         ├── index.rs      → GET /app/:id
-        └── og_png.rs     → GET /app/:id/og_png
+        └── og.png.rs     → GET /app/:id/og.png
 ```
 
 Route modules, parameter extraction, and handler registration are all generated at build time — no manual wiring needed.

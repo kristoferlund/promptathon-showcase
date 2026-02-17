@@ -25,7 +25,7 @@ pub fn get(ctx: RouteContext<Params>) -> HttpResponse<'static> {
     // Only query the DB for SEO meta tags (title, description, image)
     let (title, description, og_image) = match AppManager::get_by_id(id) {
         Ok(app) => {
-            let og = format!("/app/{}/og_png", id);
+            let og = format!("/app/{}/og.png", id);
             (app.title, app.description, og)
         }
         Err(_) => (
