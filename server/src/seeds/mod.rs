@@ -5,4 +5,6 @@ pub mod seed_001_apps;
 
 use ic_sql_migrate::Seed;
 
-pub static SEEDS: &[Seed] = &[Seed::new("seed_001_apps", seed_001_apps::seed)];
+pub static SEEDS: &[Seed] = &[
+    Seed::new("seed_001_apps", seed_001_apps::seed),
+];

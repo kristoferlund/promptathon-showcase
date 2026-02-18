@@ -6,6 +6,6 @@ pub struct Params {
     pub id: String,
 }
 
-pub mod index;
 #[path = "og.png.rs"]
 pub mod og_png;
+pub mod index;
