@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import type { App } from "@/server";
+import type { App } from "@/types";
 import { WINNER_IDS, PODIUM } from "@/lib/constants";
 
 function WinnerCardImage({ src, alt }: { src: string; alt: string }) {
@@ -64,7 +64,7 @@ export default function Winners({
 
   if (!apps) return null;
 
-  const winnerApps = WINNER_IDS.map((id) => apps.find((a) => Number(a.id) === id));
+  const winnerApps = WINNER_IDS.map((id) => apps.find((a) => a.id === id));
 
   if (winnerApps.some((a) => !a)) return null;
 

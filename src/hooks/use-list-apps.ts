@@ -1,16 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
-import useServer from "@/hooks/use-server";
-import type { App } from "@/server";
-
-export type { App };
+import type { App } from "@/types";
 
 export default function useListApps() {
-  const server = useServer();
-
   return useQuery<App[]>({
     queryKey: ["apps"],
-    queryFn: () => server!.list_apps(),
-    enabled: !!server,
-    structuralSharing: false,
+    queryFn: async () => {
+      const res = await fetch("/api/apps");
+      if (!res.ok) throw new Error("Failed to fetch apps");
+      return res.json();
+    },
   });
 }

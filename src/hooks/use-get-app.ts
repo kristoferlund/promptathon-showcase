@@ -1,22 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
-import useServer from "@/hooks/use-server";
-import type { App } from "@/server";
+import type { App } from "@/types";
 
 export default function useGetApp(id: number) {
-  const server = useServer();
-
   return useQuery<App>({
     queryKey: ["app", id],
     queryFn: async () => {
-      const result = await server!.get_app(BigInt(id));
-
-      if (result.__kind__ === "Err") {
-        throw new Error(result.Err);
+      const res = await fetch(`/api/apps/${id}`);
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error ?? "Failed to fetch app");
       }
-
-      return result.Ok;
+      return res.json();
     },
-    enabled: !!server && id > 0,
-    structuralSharing: false,
+    enabled: id > 0,
   });
 }

@@ -1,7 +1,6 @@
-use candid::CandidType;
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Debug, Clone, CandidType)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct App {
     pub id: i64,
     pub url: String,

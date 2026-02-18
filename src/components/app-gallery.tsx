@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import type { App } from "@/server";
+import type { App } from "@/types";
 import { WINNER_IDS } from "@/lib/constants";
 
 function shuffle<T>(array: T[]): T[] {
@@ -65,7 +65,7 @@ export default function AppGallery({
   const shuffledApps = useMemo(() => {
     if (!apps) return [];
     const winnerIdSet = new Set(WINNER_IDS);
-    return shuffle(apps.filter((app) => !winnerIdSet.has(Number(app.id))));
+    return shuffle(apps.filter((app) => !winnerIdSet.has(app.id)));
   }, [apps]);
 
   if (!apps || apps.length === 0) {

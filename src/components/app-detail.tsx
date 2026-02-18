@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import type { App } from "@/server";
+import type { App } from "@/types";
 import { getWinnerBadge } from "@/lib/constants";
 import ImageWithSkeleton from "@/components/image-with-skeleton";
 import ArrowLeftIcon from "@/components/icons/arrow-left";
@@ -23,7 +23,7 @@ export default function AppDetail({
 
       <article>
         {(() => {
-          const badge = getWinnerBadge(Number(app.id));
+          const badge = getWinnerBadge(app.id);
           return badge ? (
             <div
               className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold ${badge.bg} ${badge.border} ${badge.text} border mb-4`}

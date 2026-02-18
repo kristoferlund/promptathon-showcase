@@ -1440,6 +1440,7 @@ dependencies = [
  "minijinja",
  "resvg",
  "serde",
+ "serde_json",
  "url",
 ]
 

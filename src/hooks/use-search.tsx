@@ -1,22 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
-import useServer from "@/hooks/use-server";
-import type { App } from "@/server";
+import type { App } from "@/types";
 
 export default function useSearch(query: string) {
-  const server = useServer();
-
   return useQuery<App[]>({
     queryKey: ["search", query],
     queryFn: async () => {
-      const result = await server!.search(query);
-
-      if (result.__kind__ === "Err") {
-        throw new Error(result.Err);
-      }
-
-      return result.Ok;
+      const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+      if (!res.ok) throw new Error("Search failed");
+      return res.json();
     },
-    enabled: !!server && query.trim().length >= 3,
-    structuralSharing: false,
+    enabled: query.trim().length >= 3,
   });
 }

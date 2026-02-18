@@ -7,10 +7,7 @@ mod route_tree {
     include!(concat!(env!("OUT_DIR"), "/__route_tree.rs"));
 }
 
-use ic_asset_router::{
-    assets::{certify_all_assets, delete_assets},
-    set_asset_config, AssetConfig, HttpRequestOptions,
-};
+use ic_asset_router::{AssetConfig, CacheControl, HttpRequestOptions};
 use ic_cdk::{init, post_upgrade, pre_upgrade, query, update};
 use ic_http_certification::{HttpRequest, HttpResponse};
 use ic_rusqlite::{close_connection, with_connection, Connection};
@@ -28,25 +25,23 @@ fn run_migrations_and_seeds() {
 }
 
 fn setup_and_certify() {
-    // Configure the asset router:
-    // - Static assets (Vite bundles with content hashes): cached 1 year, immutable
-    // - Dynamic assets (server-rendered HTML with SEO tags): cached 1 month
-    // - Permissive security headers: suitable for SPA loading bundled fonts
-    set_asset_config(AssetConfig {
-        cache_control: ic_asset_router::CacheControl {
-            dynamic_assets: "public, max-age=2592000".into(),
-            ..ic_asset_router::CacheControl::default()
-        },
-        ..AssetConfig::default()
+    route_tree::ROUTES.with(|routes| {
+        ic_asset_router::setup(routes)
+            .with_config(AssetConfig {
+                cache_control: CacheControl {
+                    dynamic_assets: "public, max-age=2592000".into(),
+                    ..CacheControl::default()
+                },
+                ..AssetConfig::default()
+            })
+            .with_assets(&ASSETS_DIR)
+            // Delete the pre-built index.html from the certified asset cache to
+            // trigger it being regenerated with dynamic parameters and certified
+            // on first request. Page routes (/, /app/:id) will be generated dynamically
+            // with route-specific SEO meta tags injected via minijinja on first request.
+            .delete_assets(vec!["/"])
+            .build();
     });
-
-    // Certify all pre-built assets produced by Vite (JS, CSS, fonts, images, etc.)
-    certify_all_assets(&ASSETS_DIR);
-
-    // Delete the pre-built index.html from the certified asset cache.
-    // Page routes (/, /app/:id) will be generated dynamically with
-    // route-specific SEO meta tags injected via minijinja on first request.
-    delete_assets(vec!["/"]);
 }
 
 #[init]
@@ -81,21 +76,4 @@ fn http_request_update(req: HttpRequest) -> HttpResponse {
 /// so this returns an empty string for canister-relative paths.
 pub fn get_image_base_url() -> String {
     String::new()
-}
-
-// --- Candid API ---
-
-#[query]
-fn list_apps() -> Vec<app::App> {
-    app::AppManager::list().unwrap_or_default()
-}
-
-#[query]
-fn get_app(id: i64) -> Result<app::App, String> {
-    app::AppManager::get_by_id(id)
-}
-
-#[query]
-fn search(query: String) -> Result<Vec<app::App>, String> {
-    app::AppManager::search(&query)
 }

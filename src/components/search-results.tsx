@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import type { App } from "@/server";
+import type { App } from "@/types";
 
 
 export default function SearchResults({
