@@ -1,7 +1,7 @@
 use std::borrow::Cow;
 use std::collections::HashMap;
 
-use crate::page::AppManager;
+use crate::app::AppManager;
 use ic_asset_router::RouteContext;
 use ic_http_certification::{HttpResponse, StatusCode};
 use minijinja::Environment;

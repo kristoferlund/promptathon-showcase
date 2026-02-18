@@ -1,5 +1,5 @@
+mod app;
 mod ogimage;
-mod page;
 mod routes;
 mod seeds;
 
@@ -86,16 +86,16 @@ pub fn get_image_base_url() -> String {
 // --- Candid API ---
 
 #[query]
-fn list_apps() -> Vec<page::App> {
-    page::AppManager::list().unwrap_or_default()
+fn list_apps() -> Vec<app::App> {
+    app::AppManager::list().unwrap_or_default()
 }
 
 #[query]
-fn get_app(id: i64) -> Result<page::App, String> {
-    page::AppManager::get_by_id(id)
+fn get_app(id: i64) -> Result<app::App, String> {
+    app::AppManager::get_by_id(id)
 }
 
 #[query]
-fn search(query: String) -> Result<Vec<page::App>, String> {
-    page::AppManager::search(&query)
+fn search(query: String) -> Result<Vec<app::App>, String> {
+    app::AppManager::search(&query)
 }
