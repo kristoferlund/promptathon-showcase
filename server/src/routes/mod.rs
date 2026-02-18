@@ -1,4 +1,4 @@
-pub mod not_found;
+pub mod api;
 pub mod app;
 pub mod index;
-pub mod api;
+pub mod not_found;

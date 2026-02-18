@@ -1,18 +1,13 @@
 use std::borrow::Cow;
 
 use crate::app::AppManager;
-use ic_asset_router::route;
-use ic_asset_router::RouteContext;
-use ic_http_certification::{HttpResponse, StatusCode};
+use ic_asset_router::{route, HttpResponse, RouteContext, StatusCode};
 
 #[derive(Default, serde::Deserialize)]
 pub struct SearchParams {
     #[serde(default)]
     pub q: String,
 }
-
-
-
 
 #[route(certification = "skip")]
 pub fn get(ctx: RouteContext<(), SearchParams>) -> HttpResponse<'static> {
