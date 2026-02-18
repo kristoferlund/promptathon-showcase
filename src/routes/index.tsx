@@ -37,12 +37,12 @@ function Index() {
   return (
     <div className="min-h-screen flex flex-col items-center gap-10">
 
-      <PromptathonLogo className="pt-10 w-100 px-5" />
+      <PromptathonLogo className="pt-20 w-100 px-5" />
 
       {!isSearching && (
         <div className="w-full max-w-160 flex flex-col items-center">
           <p className="text-lg text-center px-10">
-            This is the January promptahon showcase! The competition saw more than 800 registered participants and {apps ? apps.length : "500+"} submitted apps. Prompt your own app into existence on <a href="https://caffeine.ai" target="_blank" rel="noreferrer" className="underline decoration-2 underline-offset-2 text-primary hover:text-primary/80 transition-colors"
+            This is the January promptahon showcase. The competition saw more than 800 registered participants and more than 200 submitted apps! Prompt your own app into existence on <a href="https://caffeine.ai" target="_blank" rel="noreferrer" className="underline decoration-2 underline-offset-2 text-primary hover:text-primary/80 transition-colors"
             >caffeine.ai</a>.
           </p>
         </div>
