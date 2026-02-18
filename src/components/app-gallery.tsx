@@ -37,7 +37,7 @@ function CardImage({ src, alt }: { src: string; alt: string }) {
         alt={alt}
         className={`w-full h-full object-cover group-hover:scale-110 transition-transform duration-300 border border-white/20 rounded ${loaded ? "opacity-100" : "opacity-0"}`}
         loading="lazy"
-        onLoad={() => setLoaded(true)}
+        onLoad={() => { setLoaded(true); }}
       />
     </div>
   );
@@ -50,6 +50,12 @@ export default function AppGallery({
   apps: App[] | undefined;
   isLoading: boolean;
 }) {
+  const shuffledApps = useMemo(() => {
+    if (!apps) return [];
+    const winnerIdSet = new Set(WINNER_IDS);
+    return shuffle(apps.filter((app) => !winnerIdSet.has(app.id)));
+  }, [apps]);
+
   if (isLoading) {
     return (
       <div className="w-full max-w-316 mx-auto px-6 pb-16">
@@ -61,12 +67,6 @@ export default function AppGallery({
       </div>
     );
   }
-
-  const shuffledApps = useMemo(() => {
-    if (!apps) return [];
-    const winnerIdSet = new Set(WINNER_IDS);
-    return shuffle(apps.filter((app) => !winnerIdSet.has(app.id)));
-  }, [apps]);
 
   if (!apps || apps.length === 0) {
     return null;

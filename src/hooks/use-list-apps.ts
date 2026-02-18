@@ -7,7 +7,7 @@ export default function useListApps() {
     queryFn: async () => {
       const res = await fetch("/api/apps");
       if (!res.ok) throw new Error("Failed to fetch apps");
-      return res.json();
+      return (await res.json()) as App[];
     },
   });
 }

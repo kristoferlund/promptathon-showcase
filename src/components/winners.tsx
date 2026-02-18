@@ -16,7 +16,7 @@ function WinnerCardImage({ src, alt }: { src: string; alt: string }) {
         alt={alt}
         className={`w-full h-full object-cover group-hover:scale-110 transition-transform duration-300 border border-white/20 rounded ${loaded ? "opacity-100" : "opacity-0"}`}
         loading="lazy"
-        onLoad={() => setLoaded(true)}
+        onLoad={() => { setLoaded(true); }}
       />
     </div>
   );

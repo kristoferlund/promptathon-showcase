@@ -20,6 +20,7 @@ export function SearchQueryProvider({ children }: { children: ReactNode }) {
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export default function useSearchQuery() {
   const context = useContext(SearchQueryContext);
   if (!context) {

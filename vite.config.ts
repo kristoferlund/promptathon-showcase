@@ -26,12 +26,12 @@ export default defineConfig({
       "/api": {
         target: canisterHost,
         changeOrigin: true,
-        headers: { Host: `${canisterId}.localhost:4943` },
+        headers: { Host: `${canisterId || ""}.localhost:4943` },
       },
       "/images": {
         target: canisterHost,
         changeOrigin: true,
-        headers: { Host: `${canisterId}.localhost:4943` },
+        headers: { Host: `${canisterId || ""}.localhost:4943` },
       },
     },
   },

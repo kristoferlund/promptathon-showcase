@@ -87,7 +87,7 @@ export default function AppDetail({
       </article>
 
       {/* Preload OG image so it's generated and cached before bots request it */}
-      <img src={`/app/${app.id}/og.png`} alt="" className="hidden" aria-hidden="true" />
+      <img src={`/app/${String(app.id)}/og.png`} alt="" className="hidden" aria-hidden="true" />
     </div>
   );
 }
