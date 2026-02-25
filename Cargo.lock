@@ -499,6 +499,8 @@ dependencies = [
 [[package]]
 name = "ic-asset-router"
 version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3e9ed88fce5ab88696f1c1711725c6659d679fe8d43505917ec5dfe10cf665dc"
 dependencies = [
  "ic-asset-router-macros",
  "ic-cdk",
@@ -514,6 +516,8 @@ dependencies = [
 [[package]]
 name = "ic-asset-router-macros"
 version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "cd282905b5774e27ae76323ea849321c307850bb1f6955be2b823c04363cc3ab"
 dependencies = [
  "proc-macro2",
  "quote",
