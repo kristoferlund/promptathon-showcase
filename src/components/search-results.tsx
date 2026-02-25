@@ -46,8 +46,8 @@ export default function SearchResults({
 
             className="block group"
           >
-            <div className="flex items-center hover:bg-card/50 rounded p-3 gap-3">
-              <div className="shrink-0 w-72 rounded overflow-hidden bg-card border-white/20 border ">
+            <div className="flex flex-col sm:flex-row items-center hover:bg-card/50 rounded p-3 gap-3">
+              <div className="shrink-0 w-full sm:w-72 rounded overflow-hidden bg-card border-white/20 border ">
                 <img
                   src={`/images/${app.image_id ?? ""}_300.jpg`}
                   alt={app.title}
