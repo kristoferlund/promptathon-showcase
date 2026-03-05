@@ -47,7 +47,7 @@ This gives crawlers and social platforms (Twitter, Slack, Discord) correct per-p
 
 ### SQLite Database with Search
 
-App metadata lives in an on-chain SQLite database ([`ic-rusqlite`](https://github.com/AstronautSergworking/ic-rusqlite)). Search queries run `LIKE` pattern matching across four columns — `app_name`, `title`, `author_name`, and `description` — with relevance-ordered results prioritizing name matches.
+App metadata lives in an on-chain SQLite database ([`ic-rusqlite`](https://github.com/wasm-forge/ic-rusqlite)). Search queries run `LIKE` pattern matching across four columns — `app_name`, `title`, `author_name`, and `description` — with relevance-ordered results prioritizing name matches.
 
 Database migrations and SQL seed files are managed by `ic-sql-migrate` and baked into the canister at compile time.
 
