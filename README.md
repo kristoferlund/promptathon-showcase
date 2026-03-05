@@ -10,7 +10,7 @@ The January competition saw more than 800 registered participants and 183 submit
 
 All HTTP responses — static and dynamic — are served with IC response certification. Crawlers and social platforms receive cryptographically verifiable responses, the same guarantee that applies to any call on the Internet Computer.
 
-The project uses [`ic-asset-router`](https://github.com/AstronautSergworking/ic-asset-router), a file-based routing library for IC canisters inspired by Next.js conventions. Route handlers are plain Rust functions organized by directory structure:
+The project uses [`ic-asset-router`](https://github.com/kristoferlund/ic-asset-router), a file-based routing library for IC canisters inspired by Next.js conventions. Route handlers are plain Rust functions organized by directory structure:
 
 ```
 server/src/routes/
