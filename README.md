@@ -10,7 +10,7 @@ The January competition saw more than 800 registered participants and 183 submit
 
 All HTTP responses — static and dynamic — are served with IC response certification. Crawlers and social platforms receive cryptographically verifiable responses, the same guarantee that applies to any call on the Internet Computer.
 
-The project uses [`ic-asset-router`](https://github.com/AstronautSergworking/ic-asset-router), a file-based routing library for IC canisters inspired by Next.js conventions. Route handlers are plain Rust functions organized by directory structure:
+The project uses [`ic-asset-router`](https://github.com/kristoferlund/ic-asset-router), a file-based routing library for IC canisters inspired by Next.js conventions. Route handlers are plain Rust functions organized by directory structure:
 
 ```
 server/src/routes/
@@ -47,7 +47,7 @@ This gives crawlers and social platforms (Twitter, Slack, Discord) correct per-p
 
 ### SQLite Database with Search
 
-App metadata lives in an on-chain SQLite database ([`ic-rusqlite`](https://github.com/AstronautSergworking/ic-rusqlite)). Search queries run `LIKE` pattern matching across four columns — `app_name`, `title`, `author_name`, and `description` — with relevance-ordered results prioritizing name matches.
+App metadata lives in an on-chain SQLite database ([`ic-rusqlite`](https://github.com/wasm-forge/ic-rusqlite)). Search queries run `LIKE` pattern matching across four columns — `app_name`, `title`, `author_name`, and `description` — with relevance-ordered results prioritizing name matches.
 
 Database migrations and SQL seed files are managed by `ic-sql-migrate` and baked into the canister at compile time.
 
@@ -65,15 +65,15 @@ A build-time indexer crawls submitted app URLs, captures dual-resolution screens
 
 ### Prerequisites
 
-- `dfx` CLI
+- icp-cli
 - Node.js / pnpm
 - OpenAI or Anthropic API key
 
-### 1. Start Local Replica
+### 1. Start Local Network
 
 ```bash
-dfx stop
-dfx start --clean --background
+icp network stop
+icp network start -d
 ```
 
 ### 2. Run the Indexer
@@ -96,10 +96,14 @@ See [indexer/README.md](indexer/README.md) for details.
 ### 3. Deploy
 
 ```bash
-dfx deploy server
+# Deploy locally (default)
+icp deploy server
+
+# Deploy to mainnet
+icp deploy server -e ic
 ```
 
-The deploy pipeline (defined in `dfx.json`):
+The deploy pipeline (defined in `icp.yaml`):
 1. `pnpm run build` — Vite builds the React frontend to `dist/`
 2. `cp -r indexer/images dist/images` — copies screenshots into the build output
 3. `cargo build` — compiles the Rust canister, embedding `dist/` (including images) via `include_dir!`
@@ -108,7 +112,7 @@ The deploy pipeline (defined in `dfx.json`):
 ### 4. Access the App
 
 ```
-http://<canister-id>.localhost:4943/
+http://<canister-id>.localhost:8000/
 ```
 
 ### Development
@@ -157,7 +161,7 @@ Images are proxied to the local canister automatically.
 │   ├── src/                   # Processing pipeline, AI enrichment, screenshots
 │   ├── submissions.csv        # Input data + cached AI results
 │   └── images/                # Cached screenshots
-├── dfx.json                   # IC deployment config
+├── icp.yaml                   # IC deployment config
 └── vite.config.ts             # Vite config with canister proxy
 ```
 

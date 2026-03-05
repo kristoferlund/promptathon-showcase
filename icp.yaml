@@ -1,0 +1,12 @@
+canisters:
+  - name: server
+    build:
+      steps:
+        - type: script
+          commands:
+            - pnpm run build
+            - cp -r indexer/images dist/images 2>/dev/null || true
+            - cargo build -p server --target wasm32-wasip1 --release
+            - wasi2ic target/wasm32-wasip1/release/server.wasm target/wasm32-wasip1/release/server_wasi2ic.wasm
+            - cp target/wasm32-wasip1/release/server_wasi2ic.wasm "$ICP_WASM_OUTPUT_PATH"
+            - ic-wasm "$ICP_WASM_OUTPUT_PATH" -o "$ICP_WASM_OUTPUT_PATH" metadata candid:service -f server/server.did -v public --keep-name-section
