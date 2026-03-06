@@ -27,9 +27,6 @@ ANTHROPIC_API_KEY=sk-ant-...
 
 # Limit submissions to process (useful during development)
 LIMIT=5
-
-# Network: "local" for local dfx replica, "ic" for mainnet
-NETWORK=local
 ```
 
 ## Usage
@@ -50,10 +47,14 @@ The indexer produces two outputs:
 Then deploy the canister from the project root:
 
 ```bash
-dfx deploy server
+# Deploy locally
+icp deploy server
+
+# Deploy to mainnet
+icp deploy server -e ic
 ```
 
-The deploy process (`dfx.json`) automatically copies `indexer/images/` into `dist/images/` after the Vite build and before the Rust build, so the images are embedded in the canister WASM via `include_dir!`.
+The deploy process (`icp.yaml`) automatically copies `indexer/images/` into `dist/images/` after the Vite build and before the Rust build, so the images are embedded in the canister WASM via `include_dir!`.
 
 ## How It Works
 
